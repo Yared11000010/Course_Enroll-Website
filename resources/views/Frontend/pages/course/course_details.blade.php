@@ -4,7 +4,8 @@
 <div class="course-details-area gray-bg pt-100">
     <div class="container">
         <div class="row">
-            <div class="col-xl-8 col-lg-8">
+            {{-- <div id="courseList"> --}}
+            <div class="col-xl-8 col-lg-8" id="courseList">
                 <div class="single-course-details-area mb-30">
                     <div class="course-details-thumb">
                         <img src="img/courses/course_details_thumb.jpg" alt="">
@@ -28,6 +29,8 @@
                     </div>
                 </div>
             </div>
+            {{-- </div> --}}
+
             <div class="col-xl-4 col-lg-4">
                 <div class="courses-details-sidebar-area">
 
@@ -37,7 +40,7 @@
                             <ul class="sidebar-link">
                                 @foreach ($category as $cate)
                                 <li>
-                                    <a href="#">{{ $cate->name }}</a>
+                                    <a href="#" onclick="displayCoursesByCategory('{{ $cate->id }}')">{{ $cate->name }}</a>
                                     <span>{{ $cate->courses()->count() }}</span>
                                 </li>
                                 @endforeach
@@ -140,5 +143,18 @@
         </div>
     </div>
 </div>
-
+<script>
+    function displayCoursesByCategory(categoryId) {
+        $.ajax({
+            url: '/get-courses-by-category/' + categoryId,
+            type: 'GET',
+            success: function(response) {
+                $('#courseList').html(response);
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+</script>
 @endsection

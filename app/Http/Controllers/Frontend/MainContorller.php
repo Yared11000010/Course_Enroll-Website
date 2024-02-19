@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\AboutUs;
 use App\Models\Banner;
 use App\Models\BlogCategory;
 use App\Models\BlogComment;
@@ -10,6 +11,8 @@ use App\Models\Blogs;
 use App\Models\Book;
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Models\CoursePDF;
+use App\Models\FAQ;
 use App\Models\NewsLetter;
 use App\Models\Order;
 use App\Models\PdfOrder;
@@ -83,7 +86,8 @@ class MainContorller extends Controller
 
     public function  about() {
 
-        return view('Frontend.pages.about.about');
+        $about_us=AboutUs::first();
+        return view('Frontend.pages.about.about',compact('about_us'));
     }
 
     public function courses(){
@@ -102,6 +106,14 @@ class MainContorller extends Controller
         // dd($course);
         return view('Frontend.pages.course.course_details',compact('course','latestCourse','fivecourse','category'));
     }
+
+    public function getCoursesByCategory($categoryId) {
+        $category = CourseCategory::findOrFail($categoryId);
+        $courses = $category->courses()->get();
+
+        return view('Frontend.pages.course.course_list_partial', compact('courses'));
+    }
+
 
     public function freecourse(){
         $courses=Course::where('type','free')->get();
@@ -185,19 +197,16 @@ class MainContorller extends Controller
     {
 
         $book = Book::findOrFail($id);
-        // $pdfPath = storage_path('app/public/book/' . $book->pdf_file); // Assuming 'pdf_path' is the column storing the file path
+        $pdfPath = storage_path('app/public/book/' . $book->pdf_file); // Assuming 'pdf_path' is the column storing the file path
 
-        // return response()->file($pdfPath);
+        return response()->file($pdfPath);
+    }
 
-        return response()->stream(function () use ($book) {
-                    $file= public_path("/files/".$book->pdf_file);
-
-            echo $file;
-
-        }, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $book->pdf_file . '"',
-        ]);
+    public function show_course_pdf($id){
+         $course_pdf=CoursePDF::where('id',$id)->get();
+         //  dd($course_pdf);
+         $pdfPath = storage_path('app/public/book/' . $course_pdf->file_path);
+         return response()->file($pdfPath);
     }
 
     public function mypdf_detail($order_code){
@@ -378,7 +387,8 @@ class MainContorller extends Controller
 
     public function faq(){
 
-        return view('Frontend.pages.faq.faq');
+        $faq=FAQ::where('status',1)->get();
+        return view('Frontend.pages.faq.faq',compact('faq'));
     }
 
 

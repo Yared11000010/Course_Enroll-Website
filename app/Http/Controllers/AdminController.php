@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ForgetPasswordAdmin;
 use App\Models\Admin;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminController extends Controller
@@ -201,5 +208,116 @@ class AdminController extends Controller
             Alert::toast('Admin has been inactived','error');
             return redirect()->route('all-admins');
         }
+
+
+
+    //for forget password
+    public function forgetpassword()
+    {
+        try {
+            return view('dashboard.forget_password.forget');
+        }catch (\Exception $e) {
+            // Log or handle the exception as needed
+            Alert::toast('something is wrong!!', 'error');
+            return redirect()->back();
+        }
+    }
+    public function ForgetPasswordStore(Request $request)
+    {
+        if (!$request->isMethod('post')) {
+            // Display an error or handle the incorrect request method
+            Alert::toast('Invalid request method!', 'error');
+            return back();
+        }
+        $request->validate([
+            'email' => 'required|email|exists:admins',
+        ]);
+
+            $token = Str::random(64);
+
+            DB::table('password_resets')->updateOrInsert([
+                'email' => $request->email,
+            ], [
+                'token' => $token,
+                'created_at' => Carbon::now()
+            ]);
+
+
+            $messageData = [
+                'token' => $token,
+            ];
+
+            try{
+             Mail::to($request->email)->send(new ForgetPasswordAdmin($messageData));
+             }catch(Exception $e){
+                     Alert::toast("something is wrong",'success');
+                     return redirect()->back();
+             }
+
+
+         Alert::toast('We have emailed your password reset link', 'success');
+         return back();
+
+    }
+    public function ResetPassword($token)
+    {
+        try{
+            return view('dashboard.forget_password.forget_password_link',['token' => $token]);
+        } catch (\Exception $e) {
+
+            Alert::toast('something is wrong!!', 'error');
+            return redirect()->back();
+        }
+    }
+
+
+    public function ResetPasswordStore(Request $request)
+    {
+
+        if (!$request->isMethod('post')) {
+            Alert::toast('Invalid request method!', 'error');
+            return back();
+        }
+
+        $request->validate([
+            'email' => 'required|email|exists:admins',
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+
+        $update = DB::table('password_resets')
+            ->where(['email' => $request->email, 'token' => $request->token])
+            ->first();
+
+        if (!$update) {
+            return back()->withInput()->with('error', 'Invalid token!');
+        }
+
+        try {
+            $user = Admin::where('email', $request->email)->first();
+
+            if (!$user) {
+                return back()->withInput()->with('error', 'Admin not found!');
+            }
+
+            // Hash and update the password
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            // Delete password_resets record
+            DB::table('password_resets')->where(['email' => $request->email])->delete();
+
+            Alert::toast('Your password has been successfully changed!', 'success');
+            return redirect()->route('admin_login');
+         } catch (\Illuminate\Validation\ValidationException $e) {
+             // Laravel's built-in validation exception
+             return redirect()->back()->withErrors($e->validator->errors())->withInput();
+         } catch (\Exception $e) {
+            // Log or handle the exception as needed
+            Alert::toast('something is wrong!!', 'error');
+            return redirect()->back();
+        }
+    }
+
 
     }

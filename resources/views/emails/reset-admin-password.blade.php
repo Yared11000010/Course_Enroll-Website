@@ -6,7 +6,7 @@
 <body>
     <h1>Forget Password Email</h1>
     You can reset password from bellow link:
-    <a href="{{ route('user-resetpasswordGet', $messageData['token']) }}">Reset Password</a>
+    <a href="{{ route('admin-resetpasswordGet', $messageData['token']) }}">Reset Password</a>
     <br>
     If you did not request a password reset, please ignore this email. Your account remains secure, and no changes have been made.
     <br>

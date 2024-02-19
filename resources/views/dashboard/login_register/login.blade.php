@@ -38,8 +38,6 @@
                 </div>
               </div>
               <!-- /.col -->
-
-              <!-- /.col -->
             </div>
 
           <div class="social-auth-links text-center mt-2 mb-3">
@@ -50,7 +48,7 @@
           <!-- /.social-auth-links -->
 
           <p class="mb-1">
-            <a href="forgot-password.html">I forgot my password</a>
+            <a href="{{ url('admin/forget-password') }}">I forgot my password</a>
           </p>
         </form>
 

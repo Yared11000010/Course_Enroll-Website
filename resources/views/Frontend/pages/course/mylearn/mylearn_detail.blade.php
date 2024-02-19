@@ -26,6 +26,29 @@
                                                 <span class="gray-color">Download course pdf :<br>
                                                 @foreach ($course->pdfs as $pdf)
                                                 <a href="{{ url('download-file/'.$pdf->file_path) }}" target="_blank">{{ $pdf->file_path }}</a><br>
+                                                {{-- <a href="{{ url('show-course-pdf/'.$pdf->id) }}">aksjf</a> --}}
+                                                <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#pdfModal">
+                                                    Open PDF
+                                                </button>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="pdfModalLabel">PDF Viewer</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div style="width: 100%; height: 800px;">
+                                                                    <iframe src="{{ url('show-course-pdf/'.$pdf->id) }}" width="100%" height="100%" style="border: none;"></iframe>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 @endforeach
                                                 </span>
                                                 <br>
@@ -33,8 +56,7 @@
                                                     @foreach ($course->youtubeLinks as $link)
                                                     <a href="{{ $link->youtube_link }}" target="_blank">{{ $link->youtube_link }}</a>
                                                     <x-embed url="{{ $link->youtube_link }}" />
-                                                        @endforeach
-
+                                                    @endforeach
                                                     </span>
                                                <div class="container">
                                             </div>

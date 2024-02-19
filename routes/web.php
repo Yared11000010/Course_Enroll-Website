@@ -4,14 +4,23 @@ use App\Http\Controllers\Dashboard\Blog\BlogsCategoryController;
 use App\Http\Controllers\Dashboard\Blog\BlogsCommmentController;
 use App\Http\Controllers\Dashboard\Blog\BlogsController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Dashboard\AboutController;
 use App\Http\Controllers\Dashboard\BannerController;
 use App\Http\Controllers\Dashboard\BookController;
 use App\Http\Controllers\Dashboard\BookOrderController;
 use App\Http\Controllers\Dashboard\ContactUsController as DashboardContactUsController;
+use App\Http\Controllers\Dashboard\RoleAndPermission\AdminController as AAdminContoller;
 use App\Http\Controllers\Dashboard\Course\CourseCategoryController;
 use App\Http\Controllers\Dashboard\Course\CourseController;
+use App\Http\Controllers\Dashboard\FAQController;
 use App\Http\Controllers\Dashboard\NewsLettersController;
 use App\Http\Controllers\Dashboard\OrderController;
+use App\Http\Controllers\Dashboard\RoleAndPermission\AdminController as RoleAndPermissionAdminController;
+use App\Http\Controllers\Dashboard\RoleAndPermission\AdminRoleController;
+use App\Http\Controllers\Dashboard\RoleAndPermission\PermissionCategoryController;
+use App\Http\Controllers\Dashboard\RoleAndPermission\PermissionController;
+use App\Http\Controllers\Dashboard\RoleAndPermission\RoleController;
+use App\Http\Controllers\Dashboard\RoleAndPermission\RolePermissionController;
 use App\Http\Controllers\Dashboard\TestMonyController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -103,6 +112,8 @@ Route::get('/shop',[MainContorller::class,'shop'])->name('shop');
 Route::get('shop-details/{id}',[MainContorller::class,'shop_details'])->name('shop_details');
 Route::get('course/detail/{id}',[MainContorller::class,'coursedetails'])->name('course-details');
 
+Route::get('/get-courses-by-category/{categoryId}', [MainContorller::class,'getCoursesByCategory']);
+
 Route::get('consltation',[MainContorller::class,'consltation'])->name('consltation');
 
 //for contact us
@@ -159,10 +170,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('check-book-order-transactions',[MainContorller::class,'check_book_order_transactions'])->name('check-book-order-transactions');
 
     Route::get('/pdf/{id}', [MainContorller::class,'show'])->name('pdf.show');
+    Route::get('show-course-pdf/{id}',[MainContorller::class,'show_course_pdf'])->name('show-course-pdf');
 
 });
 
 
+
+Route::get('admin/forget-password', [AdminController::class, 'forgetpassword'])->name('admin-forget-password');
+Route::post('admin/forget-password', [AdminController::class, 'ForgetPasswordStore'])->name('admin-forgetpassword');
+Route::get('admin/reset-password/{token}', [AdminController::class, 'ResetPassword'])->name('admin-resetpasswordGet');
+Route::match(['get','post'],'admin/reset-password', [AdminController::class, 'ResetPasswordStore'])->name('admin-resetPasswordPost');
 
 Route::prefix('admin')->group(function(){
 
@@ -307,6 +324,58 @@ Route::prefix('admin')->group(function(){
         Route::get('student-says/delete/{id}',[TestMonyController::class,'delete'])->name('delete-student-say');
         Route::get('student-says/active/{id}',[TestMonyController::class,'active'])->name('active-student-say');
         Route::get('student-says/inactive/{id}',[TestMonyController::class,'inactive'])->name('inactive-student-say');
+
+
+              //routing for blog category
+      Route::get('faqs',[FAQController::class,'index'])->name('faqs');
+      Route::get('faq/add',[FAQController::class,'create'])->name('add-faq');
+      Route::post('faq/store',[FAQController::class,'store'])->name('store-faq');
+      Route::get('faq/edit/{id}',[FAQController::class,'edit'])->name('edit-faq');
+      Route::put('faq/update',[FAQController::class,'update'])->name('update-faq');
+      Route::get('faq/delete/{id}',[FAQController::class,'delete'])->name('delete-faq');
+      Route::get('faq/active/{id}',[FAQController::class,'active'])->name('active-faq');
+      Route::get('faq/inactive/{id}',[FAQController::class,'inactive'])->name('inactive-faq');
+
+
+      Route::get('all-about-us/',[AboutController::class,'index'])->name('all-about-us');
+      Route::get('about/edit/{id}',[AboutController::class,'edit'])->name('edit-about');
+      Route::put('about/update',[AboutController::class,'update'])->name('update-about');
+
+
+      Route::get('permission-categories/',[PermissionCategoryController::class,'index'])->name('permission.category.index');
+      Route::get('permission-category/create/',[PermissionCategoryController::class,'create'])->name('permission.category.create');
+      Route::post('permission-category/store/',[PermissionCategoryController::class,'store'])->name('permission.category.store');
+      Route::get('permission-category/edit/{id}',[PermissionCategoryController::class,'edit'])->name('permission.category.edit');
+      Route::put('permission-category/update/',[PermissionCategoryController::class,'update'])->name('permission.category.update');
+      Route::get('permission-category/destroy/{id}',[PermissionCategoryController::class,'destroy'])->name('permission.category.destroy');
+      Route::get('permission-category/active/{id}',[PermissionCategoryController::class,'active'])->name('permission.category.active');
+      Route::get('permission-category/inactive/{id}',[PermissionCategoryController::class,'inactive'])->name('permission.category.inactive');
+
+
+      Route::get('permissions/',[PermissionController::class,'index'])->name('permission.index');
+      Route::get('permission/create/',[PermissionController::class,'create'])->name('permission.create');
+      Route::post('permission/store/',[PermissionController::class,'store'])->name('permission.store');
+      Route::get('permission/edit/{id}',[PermissionController::class,'edit'])->name('permission.edit');
+      Route::put('permission/update/',[PermissionController::class,'update'])->name('permission.update');
+      Route::get('permission/destroy/{id}',[PermissionController::class,'destroy'])->name('permission.destroy');
+
+
+      Route::get('roles/',[RoleController::class,'index'])->name('role.index');
+      Route::get('role/create/',[RoleController::class,'create'])->name('role.create');
+      Route::post('role/store/',[RoleController::class,'store'])->name('role.store');
+      Route::get('role/edit/{id}',[RoleController::class,'edit'])->name('role.edit');
+      Route::put('role/update/',[RoleController::class,'update'])->name('role.update');
+      Route::get('role/destroy/{id}',[RoleController::class,'destroy'])->name('role.destroy');
+
+
+
+      Route::get('role/{id}/permission',[RolePermissionController::class,'edit'])->name('role_permissions_edit');
+      Route::put('roles/{role}/permissions', [RolePermissionController::class, 'update'])->name('role_permissions.update');
+
+      Route::get('all-admin-user',[AAdminContoller::class,'index'])->name('all-admin-user');
+      Route::get('assign-role-to-admin/{id}',[AAdminContoller::class,'assignRole'])->name('assign-role-to-admin');
+      Route::post('update-admin-role', [AAdminContoller::class, 'updateRole'])->name('update-admin-role');
+
 
     });
 });

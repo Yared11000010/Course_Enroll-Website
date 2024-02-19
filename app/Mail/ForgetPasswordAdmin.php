@@ -9,10 +9,9 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ForgetPassword extends Mailable
+class ForgetPasswordAdmin extends Mailable
 {
     use Queueable, SerializesModels;
-
     public $messageData;
 
     /**
@@ -33,7 +32,7 @@ class ForgetPassword extends Mailable
     public function build()
     {
         return $this->subject('Reset your password')
-                    ->view('emails.reset-user-password');
+                    ->view('emails.reset-admin-password');
     }
 
     /**

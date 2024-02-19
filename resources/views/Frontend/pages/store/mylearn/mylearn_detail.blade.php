@@ -18,18 +18,33 @@
                     <div class="sohop-heading mb-20">
                         <h1 class="shop-book-name"><a href="shop_pages.html">{{ $pdf->title }}</a></h1>
                         <p>
-                            {{ $pdf->description }}
+                            {!! $pdf->description !!}
                         </p>
                     </div>
                     <div class="shop-inner-details d-flex">
+                      &nbsp;
+                    <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#pdfModal">
+                        Open PDF
+                    </button>
 
-                        <div class="book-price">
-                            <span class="price">Price</span>
-                            <span class="user-number">$ {{ $pdf->price }}</span>
-                        </div>&nbsp;
-                        <div class="book-ratings text-right">
-                            <a href="{{ url('download-pdf-file/'.$pdf->pdf_file) }}" target="_blank" style="background-color: #FDC800;color:black;padding:8px 18px;"><u>{{ $pdf->pdf_file }}</u></a></li>
+                    <!-- Modal -->
+                    <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="pdfModalLabel">PDF Viewer</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div style="width: 100%; height: 800px;">
+                                        <iframe src="{{ route('pdf.show', ['id' => $pdf->id]) }}" width="100%" height="100%" style="border: none;"></iframe>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

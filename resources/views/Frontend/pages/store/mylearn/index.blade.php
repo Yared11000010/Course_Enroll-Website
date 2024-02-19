@@ -1,4 +1,3 @@
-
 @extends('Frontend.layouts.main')
 @section('content')
 
@@ -48,98 +47,69 @@
                     <div class="book-inner-content">
                         <div class="sohop-heading mb-20">
                             <h1 class="shop-book-name"><a href="{{ url('shop-details/'.$book->id) }}">{{ $book->title }}</a></h1>
-                            <p>  <?php
+                            <p class="pr-3"> <?php
                                 $words = str_word_count(strip_tags($book->description), 2);
                                 $first20Words = implode(' ', array_slice($words, 0, 10));
                                 echo $first20Words . (count($words) > 10 ? '...' : '');
                             ?></p>
                         </div>
                         <div class="shop-inner-details d-flex">
-                            <div class="book-price">
-                                <span class="price">Price</span>
-                                <span class="user-number">$ {{ $book->price }}</span>
-                            </div>
                             <div class="book-price text-right">
                                 @php
                                 $order = App\Models\PdfOrder::where('user_id', Auth::user()->id)
-                                        ->where('pdf_id', $book->id)
-                                        ->first();
-                                 @endphp
+                                ->where('pdf_id', $book->id)
+                                ->first();
+                                @endphp
                                 @if ($order && $order->status !== "paid")
-                                    <div class="courses-button f-left">
-                                        <button type="button" class="py-2 px-2" style="background-color:#FDC800; border:none;color:black; border-radius:0.3rem;" data-toggle="modal" data-target="#exampleModal" onclick="setCourseId({{ $book->id }})">
-                                            Verify your payment
-                                        </button>
-                                    </div>
+                                <div class="courses-button f-left">
+                                    <button type="button" class="py-2 px-2" style="background-color:#FDC800; border:none;color:black; border-radius:0.3rem;" data-toggle="modal" data-target="#exampleModal" onclick="setCourseId({{ $book->id }})">
+                                        Verify your payment
+                                    </button>
+                                </div>
                                 @endif
-
+                                <div class="ml-5"></div>
                                 @if ($order && $order->status === "paid")
-                                <!-- Button to trigger the modal -->
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal{{ $book->id }}">
                                     Open PDF
                                 </button>
-
                                 <!-- Modal -->
-                                <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="pdfModal{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel{{ $book->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="pdfModalLabel">PDF Viewer</h5>
+                                                <h5 class="modal-title" id="pdfModalLabel{{ $book->id }}">PDF Viewer</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
-                                            <div class="modal-body" >
-                                                <div id="pdf-viewer"  style="width: 100%; height:600px;"></div>
+                                            <div class="modal-body">
+                                                <div style="width: 100%; height: 800px;">
+                                                    <iframe src="{{ route('pdf.show', ['id' => $book->id]) }}" width="100%" height="100%" style="border: none;"></iframe>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <a href="{{ route('pdf.show', ['id' => $book->id]) }}" target="_blank">View PDF</a>
+                                &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+                                <a href="{{ url('my-pdf/'.$book->order_code) }}" class="btn btn-primary">view</a>
 
-                                    <div class="courses-button f-right">
-                                        <a href="{{ url('my-pdf/'.$book->order_code) }}" type="button" class="px-2" style="padding:13px 0px; background-color:#FDC800; border:none;color:black; border-radius:0.3rem;">
-                                            View Details
-                                        </a>
-                                    </div> --}}
+                                {{-- <a href="{{ route('pdf.show', ['id' => $book->id]) }}" target="_blank">View PDF</a> --}}
                                 @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-            </div>
             @endforeach
-            </div>
-</div>
+        </div>
     </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.3.0/pdfobject.min.js"></script>
-<script src="sha512-P5CZHP7ONr+ivoaV0K5CRpUjuIJjg2OQ2lZ5edi+efrFxjCxqvMQOe3US8NcXc/ceVt3/ntx7FaWhCFtnF+1Wg=="></script>
-<style>
-    #toolbar {
-      position: fixed;
-      width: 100%;
-      z-index: 4;
-      display:none;
-      /* This prevents touch actions done over toolbar (or any child elements such
-      as flyouts/overflow menu) from scrolling/zooming the PDF content. */
-      touch-action: none;
-    }
+</div>
 
-    </style>
-<script>
-    const options = {
-    pdfOpenParams: {
-        view: "FitV",
-        toolbar: 0 // Hide toolbar
-    }
-};
-    PDFObject.embed("{{ route('pdf.show', ['id' => 4]) }}", "#pdf-viewer",options);
-    document.getElementById("pdfViewer").addEventListener('contextmenu', event => event.preventDefault());
-
-</script>
 <script>
     function setCourseId(courseId) {
         document.getElementById("book_id").value = courseId;
     }
+
 </script>
 @endsection
+

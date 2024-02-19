@@ -90,13 +90,11 @@ class BannerController extends Controller
     {
         try {
             $banner = Banner::find($id);
-
             if (!$banner) {
                 // Handle the case where the banner is not found
                 Alert::toast('Banner not found', 'error');
                 return redirect()->back();
             }
-
             return view('banner.edit', compact('banner'));
         } catch (\Exception $e) {
             // Handle exceptions or errors

@@ -66,7 +66,7 @@ class PaymentController extends Controller
         $name=$user->first_name." ".$user->last_name;
         //    dd($name);
 
-        $admin_email="atsbehateklu166@gmail.com";
+        $admin_email="sayzanarim@gmail.com";
         $admin_name="Tsafew";
 
         $messageData=[
