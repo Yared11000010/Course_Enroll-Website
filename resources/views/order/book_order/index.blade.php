@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -63,7 +66,10 @@
                                                     <td>{{ $order->pdf->title }}</td>
                                                     <td>{{ $order->payment_reference }}</td>
                                                     <td>{{ $order->amount }}</td>
-                                                    <td> <a href="{{ url('admin/view-pdf-payment-receipt/'.$order->id) }}" target="_blank"><u>{{ $order->payment_receipt }}</u></a>
+                                                    <td>
+                                                        @if ($user && $user->hasPermissionByRole('view payment receipt'))
+                                                        <a href="{{ url('admin/view-pdf-payment-receipt/'.$order->id) }}" target="_blank"><u>{{ $order->payment_receipt }}</u></a>
+                                                        @endif
                                                     </td>
                                                     <td>
                                                     <button type="button" class="btn btn-primary">
@@ -75,13 +81,16 @@
                                                         {{ $order->created_at }}
                                                     </td>
                                                     <td class="" style="">
+                                                        @if ($user && $user->hasPermissionByRole('view order'))
                                                         <a href="{{ url('admin/pdf-orders/view-detais/'.$order->id) }}"  data-confirm-delete="true" class=" btn-sm bg-secondary">
                                                             <i class="fas fa-eye text-white"></i>
                                                         </a>
-
+                                                        @endif
+                                                        @if ($user && $user->hasPermissionByRole('delete order'))
                                                         <a href="{{ url('admin/pdf-orders/delete/'.$order->id) }}"  data-confirm-delete="true" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach

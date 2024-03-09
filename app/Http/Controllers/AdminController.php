@@ -128,17 +128,29 @@ class AdminController extends Controller
             confirmDelete($title, $text);
 
             $alladmins=Admin::all();
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             return view('admins.index',compact('alladmins'));
         }
 
         public function create(){
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             return view('admins.add');
         }
 
         public function store(Request $request){
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
                 // Validate the incoming request data
             $request->validate([
                 'name' => 'required|string|max:255',
@@ -159,7 +171,11 @@ class AdminController extends Controller
         }
 
         public function edit($id){
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $admin=Admin::find($id);
 
             return view('admins.edit',compact('admin'));
@@ -167,6 +183,11 @@ class AdminController extends Controller
 
         public function update(Request $request, $id){
             // Validate the incoming request data
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email',
@@ -185,7 +206,11 @@ class AdminController extends Controller
             return redirect()->route('all-admins');
         }
         public function delete($id){
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $admin=Admin::find($id);
             $admin->delete();
             Alert::toast('Admin has been deleted','error');
@@ -193,6 +218,11 @@ class AdminController extends Controller
         }
 
         public function active($id){
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $admin=Admin::find($id);
             $admin->status=1;
             $admin->save();
@@ -202,6 +232,11 @@ class AdminController extends Controller
         }
 
         public function inactive($id){
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $admin=Admin::find($id);
             $admin->status=0;
             $admin->save();

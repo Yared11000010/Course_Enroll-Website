@@ -14,7 +14,11 @@ class BlogsCategoryController extends Controller
     public function index()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view blog category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $blog_categories = BlogCategory::paginate(10);
             return view('blogs.category.index', compact('blog_categories'));
         } catch (\Exception $e) {
@@ -27,7 +31,11 @@ class BlogsCategoryController extends Controller
     public function create()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add blog category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             return view('blogs.category.create');
         } catch (\Exception $e) {
             // Handle exceptions or errors
@@ -39,7 +47,11 @@ class BlogsCategoryController extends Controller
     public function store(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add blog category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('post')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -70,7 +82,11 @@ class BlogsCategoryController extends Controller
     public function edit($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $blog_categories = BlogCategory::find($id);
             return view('blogs.category.edit', compact('blog_categories'));
 
@@ -84,7 +100,11 @@ class BlogsCategoryController extends Controller
     public function update(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('put')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -113,7 +133,11 @@ class BlogsCategoryController extends Controller
     public function delete($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete blog category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $category = BlogCategory::find($id);
             $category->delete();
 
@@ -130,7 +154,11 @@ class BlogsCategoryController extends Controller
     {
         try {
 
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $category = BlogCategory::find($id);
             $category->status = 1;
             $category->save();
@@ -147,7 +175,11 @@ class BlogsCategoryController extends Controller
     public function inactive($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $category = BlogCategory::find($id);
             $category->status = 0;
             $category->save();

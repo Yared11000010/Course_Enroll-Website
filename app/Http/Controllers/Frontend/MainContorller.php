@@ -20,6 +20,8 @@ use App\Models\Testmony;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -29,13 +31,20 @@ class MainContorller extends Controller
     //
     public function index(){
 
+        $course_category=CourseCategory::all();
         $course=Course::where('type','paid')->get();
         $books=Book::where('status',1)->get();
         $count_course=Course::count();
         $count_user=User::count();
         $testmony=Testmony::where('status',1)->get();
         $banners=Banner::where('status',1)->get();
-        return view('Frontend.layouts.index',compact('course','count_course','count_user','books','banners','testmony'));
+        return view('Frontend.layouts.index',compact('course_category','course','count_course','count_user','books','banners','testmony'));
+    }
+
+    public function category($id){
+        $category=CourseCategory::find($id)->first();
+        $courses=Course::where('category_id',$id)->get();
+        return view('Frontend.pages.course.category.index',compact('courses','category'));
     }
 
     public function consltation(){
@@ -114,6 +123,13 @@ class MainContorller extends Controller
         return view('Frontend.pages.course.course_list_partial', compact('courses'));
     }
 
+    public function getBlogByCategory($categoryId) {
+        $blog = BlogCategory::findOrFail($categoryId);
+        $blogs = $blog->blogs()->get();
+
+        return view('Frontend.pages.blogs.blog_list_partial', compact('blogs'));
+    }
+
 
     public function freecourse(){
         $courses=Course::where('type','free')->get();
@@ -123,12 +139,26 @@ class MainContorller extends Controller
     }
 
     public function freecoursedetail($course_code){
+          // Google Drive video link
+          $googleDriveLink = "https://drive.google.com/file/d/192E6jyxjPHGYMTMTjlTgrhkvPL6J78hp/preview";
+
+          // Encrypt the link
+          $encryptedLink = Crypt::encryptString($googleDriveLink);
         $course=Course::with('category','youtubeLinks','pdfs')->where('type','free')->get();
         foreach( $course as $cor){
          $cor->where('course_code',$course_code)->first();
          }
 
-        return view('Frontend.pages.course.free_course.details',compact('cor'));
+        return view('Frontend.pages.course.free_course.details',compact('cor','encryptedLink'));
+    }
+
+    public function decryptLink(Request $request)
+    {
+        // Decrypt the encrypted link
+        $decryptedLink = Crypt::decryptString($request->input('encryptedLink'));
+
+        // Return the decrypted link as JSON
+        return response()->json(['decryptedLink' => $decryptedLink]);
     }
 
 
@@ -202,12 +232,15 @@ class MainContorller extends Controller
         return response()->file($pdfPath);
     }
 
+
     public function show_course_pdf($id){
-         $course_pdf=CoursePDF::where('id',$id)->get();
+         $course_pdf=CoursePDF::findOrFail($id);
          //  dd($course_pdf);
-         $pdfPath = storage_path('app/public/book/' . $course_pdf->file_path);
+         $pdfPath = storage_path('app/public/course/' . $course_pdf->file_path);
          return response()->file($pdfPath);
     }
+
+
 
     public function mypdf_detail($order_code){
         $pdf = Book::where('order_code', $order_code)->first();
@@ -348,6 +381,10 @@ class MainContorller extends Controller
 
     public function blog_details($id){
 
+        $latestFiveBlogs = Blogs::latest()->take(5)->get();
+        $latestCourse=Course::latest()->take(5)->get();
+        $blog_category=BlogCategory::where('status',1)->get();
+
         $blogs=Blogs::findOrFail($id);
         if($blogs){
             $blog_comment = BlogComment::where('blog_id', $id)
@@ -355,9 +392,23 @@ class MainContorller extends Controller
             ->simplePaginate(4);
             // dd($blog_comment);
             $count_blog_comment=$blog_comment->count();
-            return view('Frontend.pages.blogs.blogdetails',compact('blogs','blog_comment','count_blog_comment'));
+            return view('Frontend.pages.blogs.blogdetails',compact('blog_category','blogs','latestFiveBlogs','latestCourse','blog_comment','count_blog_comment'));
         }
     }
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $latestFiveBlogs = Blogs::latest()->take(5)->get();
+        $latestCourse=Course::latest()->take(5)->get();
+        $blog_category=BlogCategory::where('status',1)->get();
+
+        $blogs = Blogs::where('title', 'like', "%$query%")
+                            ->orWhere('description', 'like', "%$query%")
+                            ->paginate(10);
+
+        return view('Frontend.pages.blogs.blog_list_partial', ['blogs' => $blogs,'latestFiveBlogs'=>$latestFiveBlogs,'latestCourse'=>$latestCourse,'blog_category'=>$blog_category]);
+    }
+
     public function send_comment(Request $request){
 
         $request->validate([

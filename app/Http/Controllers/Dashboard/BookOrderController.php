@@ -8,6 +8,7 @@ use App\Models\PdfOrder;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -15,6 +16,11 @@ class BookOrderController extends Controller
 {
        //
        public function index(){
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('view order')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $all_order=PdfOrder::with('user','pdf')->get();
         // dd($all_order);
        return view('order.book_order.index',compact('all_order'));
@@ -24,7 +30,11 @@ class BookOrderController extends Controller
     public function delete($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete order')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $Order = PdfOrder::find($id);
             $Order->delete();
             Alert::toast('Pdf order has been deleted successfully!', 'error');
@@ -38,7 +48,11 @@ class BookOrderController extends Controller
 
 
     public function update_payment(Request $request){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('edit order')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $order=PdfOrder::find($request->input('id'));
         // dd($order->status);
         $user_id=$request->input('user_id');
@@ -110,6 +124,11 @@ class BookOrderController extends Controller
     }
 
     public function detail($id){
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('view order')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $order=PdfOrder::with('user','pdf')->where('id',$id)->first();
      return view('order.book_order.detail',compact('order'));
     }

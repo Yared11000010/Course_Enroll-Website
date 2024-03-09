@@ -106,123 +106,31 @@
             </div>
             <div class="col-xl-4 col-lg-4">
                 <div class="courses-details-sidebar-area">
-                    <div class="widget mb-40 white-bg">
-                        <div class="sidebar-form">
-                            <form action="#">
-                                <input placeholder="Search course" type="text">
-                                <button type="submit">
-                                    <i class="ti-search"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                    
                     <div class="widget mb-40 widget-padding white-bg">
-                        <h4 class="widget-title">Category</h4>
-                        <div class="widget-link">
-                            <ul class="sidebar-link">
-                                <li>
-                                    <a href="#">Busines Studies</a>
-                                    <span>05</span>
-                                </li>
-                                <li>
-                                    <a href="#">CSE Engineering</a>
-                                    <span>07</span>
-                                </li>
-                                <li>
-                                    <a href="#">Lerning English</a>
-                                    <span>03</span>
-                                </li>
-                                <li>
-                                    <a href="#">Civil Engineering</a>
-                                    <span>05</span>
-                                </li>
-                                <li>
-                                    <a href="#">Islamic Studies</a>
-                                    <span>02</span>
-                                </li>
-                                <li>
-                                    <a href="#">Banking Management</a>
-                                    <span>09</span>
-                                </li>
-                                <li>
-                                    <a href="#">Social Science</a>
-                                    <span>13</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="widget mb-40 widget-padding white-bg">
-                        <h4 class="widget-title">Recent Course</h4>
+                        <h4 class="widget-title">Recent Posts</h4>
                         <div class="sidebar-rc-post">
                             <ul>
+                                @foreach ($latestFiveBlogs as $latest )
                                 <li>
                                     <div class="sidebar-rc-post-main-area d-flex mb-20">
                                         <div class="rc-post-thumb">
-                                            <a href="course_details.html">
-                                                <img src="img/courses/rcourses_thumb01.png" alt="">
+                                            <a href="{{ url('blogs/detail/'.$latest->id) }}">
+                                                <img src="{{ asset('/storage/blog/'.$latest->image) }}" style="max-width: 40px; max-height:40px; " alt="">
                                             </a>
                                         </div>
                                         <div class="rc-post-content">
                                             <h4>
-                                                <a href="course_details.html">How to design mobile apps with full resposibe layout</a>
+                                                <a href="{{ url('blogs/detail/'.$latest->id) }}">{{ $latest->title }}</a>
                                             </h4>
                                             <div class="widget-advisors-name">
-                                                <span>Advisor : <span class="f-500">Marcelo</span></span>
+                                                <span>added by : <span class="f-500">{{ $latest->added_by }}</span></span>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                                <li>
-                                    <div class="sidebar-rc-post-main-area d-flex mb-20">
-                                        <div class="rc-post-thumb">
-                                            <a href="course_details.html">
-                                                <img src="img/courses/rcourses_thumb02.png" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="rc-post-content">
-                                            <h4>
-                                                <a href="course_details.html">How to design mobile apps with full resposibe layout</a>
-                                            </h4>
-                                            <div class="widget-advisors-name">
-                                                <span>Advisor : <span class="f-500">Marcelo</span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="sidebar-rc-post-main-area d-flex mb-20">
-                                        <div class="rc-post-thumb">
-                                            <a href="course_details.html">
-                                                <img src="img/courses/rcourses_thumb03.png" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="rc-post-content">
-                                            <h4>
-                                                <a href="course_details.html">How to design mobile apps with full resposibe layout</a>
-                                            </h4>
-                                            <div class="widget-advisors-name">
-                                                <span>Advisor : <span class="f-500">Marcelo</span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="sidebar-rc-post-main-area d-flex">
-                                        <div class="rc-post-thumb">
-                                            <a href="course_details.html">
-                                                <img src="img/courses/rcourses_thumb04.png" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="rc-post-content">
-                                            <h4>
-                                                <a href="course_details.html">How to design mobile apps with full resposibe layout</a>
-                                            </h4>
-                                            <div class="widget-advisors-name">
-                                                <span>Advisor : <span class="f-500">Marcelo</span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
+                                @endforeach
+
                             </ul>
                         </div>
                     </div>
@@ -230,27 +138,11 @@
                         <h4 class="widget-title">Recent Course</h4>
                         <div class="widget-tags clearfix">
                             <ul class="sidebar-tad clearfix">
-                                <li>
-                                    <a href="#">CSE</a>
+                                @foreach ($latestCourse as $course )
+                                <li >
+                                    <a href="{{ url('course/detail/'.$course->course_code) }}" style="width: 100%">{{ $course->title }}</a>
                                 </li>
-                                <li>
-                                    <a href="#">Business</a>
-                                </li>
-                                <li>
-                                    <a href="#">Study</a>
-                                </li>
-                                <li>
-                                    <a href="#">English</a>
-                                </li>
-                                <li>
-                                    <a href="#">Education</a>
-                                </li>
-                                <li>
-                                    <a href="#">Engineering</a>
-                                </li>
-                                <li>
-                                    <a href="#">Advisor</a>
-                                </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -258,9 +150,9 @@
                         <div class="banner-thumb pos-relative">
                             <img src="img/courses/course_banner_01.png" alt="">
                             <div class="bannger-text">
-                                <h2>New eBook are availablei our shop</h2>
+                                <h2 class="text-dark">New eBook are avalible in our shop</h2>
                                 <div class="banner-btn">
-                                    <button class="btn white-bg-btn">shop now</button>
+                                    <a href="{{ route('shop') }}" class="btn white-bg-btn">shop now</a>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,8 @@
 @extends('dashboard.layout_dashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper p-4" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -21,8 +24,9 @@
     <div class="col-10">
         <div class="card card">
             <div class="card-header">
-          <a href="{{ url('admin/faqs') }}" class="btn btn-secondary">All FAQs</a>
-            </div>
+                @if ($user && $user->hasPermissionByRole('view faq'))
+                <a href="{{ url('admin/faqs') }}" class="btn btn-secondary">All FAQs</a>
+                @endif            </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <form method="POST" action="{{ route('update-faq') }}">

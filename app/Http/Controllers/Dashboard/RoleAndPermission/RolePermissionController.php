@@ -7,17 +7,19 @@ use App\Models\PermissionCategory;
 use App\Models\Permissions;
 use App\Models\Roles;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class RolePermissionController extends Controller
 {
     public function edit($id)
     {
-        // try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('assign role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+        try {
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('assign permission')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
 
 
             $roles = Roles::find($id);
@@ -26,19 +28,21 @@ class RolePermissionController extends Controller
             // dd($permissions);
 
             return view('permissions.role_permissions.edit', compact('roles', 'permissions'));
-        // } catch (\Exception $e) {
-        //     Alert::toast('something is wrong!!', 'error');
-        //     return redirect()->back();
-        // }
+        } catch (\Exception $e) {
+            Alert::toast('something is wrong!!', 'error');
+            return redirect()->back();
+        }
     }
 
     public function update(Request $request ,Roles $role)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('assign role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('assign permission')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
+
 
             if (!$request->method('put')) {
                 Alert::toast('something is wrong!!', 'error');

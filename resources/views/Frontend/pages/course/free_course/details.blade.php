@@ -18,41 +18,46 @@
                                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                                     <div class="course-details-overview-top">
                                         <p class="course-details-overview-para"></p>
-                                        <p>{{$cor->description }}</p>
+                                        <p>{!! $cor->description !!}</p>
                                     </div>
                                     <div class="course-details-overview-bottom d-flex justify-content-between mt-25">
                                         <div class="course-overview-info-left">
                                             <div class="course-overview-student-lecture mt-10">
-                                                <span class="gray-color">Download course pdf :<br>
+                                                <span class="gray-color">course pdf :<br>
                                                     @foreach ($cor->pdfs as $pdf)
                                                     <a href="{{ url('download-file/'.$pdf->file_path) }}" target="_blank">{{ $pdf->file_path }}</a><br>
                                                     @endforeach
                                                     </span>
-                                                    <br>
-                                                    <span class="gray-color">Course Video : <br>
-                                                        @foreach ($cor->youtubeLinks as $link)
-                                                        <a href="{{ $link->youtube_link }}" target="_blank">{{ $link->youtube_link }}</a>
-                                                        <x-embed url="{{ $link->youtube_link }}" />
-                                                            @endforeach
 
-                                                        </span>
                                                 {{-- <span class="gray-color">Download course pdf :
                                                 <a href="{{ url('download-file/'.$cor->pdf_file) }}">{{$cor->pdf_file }}</a>
                                                 </span>
                                                 <span class="gray-color">Course Video :
                                                     <x-embed url="{{$cor->youtube_link }}" aspect-ratio="22:22" />
                                                 </span> --}}
-                                               <div class="container">
+                                                 <div class="container">
                                             </div>
-                                            </div>
-                                            <div class="course-overview-info-advisor mt-10">
-                                                <span class="gray-color">Date : <span class="primary-color"> {{$cor->created_at }}</span></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @if($cor->video)
+                        <div class="row">
+                             <div class="col-md-12">
+                              <span class="gray-color">Course Video : <br></span>
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <video id="player" class="embed-responsive-item" playsinline controls data-poster="/path/to/poster.jpg">
+                                        <source src="{{ asset('/storage/course/video/'.$cor->video) }}" type="video/mp4" />
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        <div class="course-overview-info-advisor mt-10">
+                          <span class="gray-color">Date : <span class="primary-color"> {{$cor->created_at }}</span></span>
+                       </div>
                     </div>
                 </div>
             </div>

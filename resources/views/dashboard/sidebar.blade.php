@@ -5,18 +5,12 @@
         <img src="{{ asset('dashboard/dist/img/logo.png') }}" style="height: 60px;" alt="">
       </span>
     </a>
-
+    @php
+    $user = Auth::guard('admin')->user();
+    @endphp
     <!-- Sidebar -->
     <div class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition"><div class="os-resize-observer-host observed"><div class="os-resize-observer" style="left: 0px; right: auto;"></div></div><div class="os-size-auto-observer observed" style="height: calc(100% + 1px); float: left;"><div class="os-resize-observer"></div></div><div class="os-content-glue" style="margin: 0px -8px; width: 249px; height: 316px;"></div><div class="os-padding"><div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow-y: scroll;"><div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
-      <!-- Sidebar user panel (optional) -->
-      {{-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-        </div>
-        <div class="info">
-          <h2 href="#" class="d-block">Wellcome : <b>{{ Auth::guard('admin')->user()->name }}</b> </h2>
-        </div>
-      </div> --}}
-      <!-- Sidebar Menu -->
+
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" style="padding-bottom: 100px;" data-widget="treeview" role="menu" data-accordion="false" >
           <!-- Add icons to the links using the .nav-icon class
@@ -29,7 +23,7 @@
               </p>
             </a>
           </li>
-
+          @if($user->hasPermissionByRole('assign role') || $user->hasPermissionByRole('view role') || $user->hasPermissionByRole('view permission') )
           <li class="nav-item {{ request()->is('admin/assign-role-to-admin*')?'menu-open':'' }}  {{ request()->is('admin/permission*')?'menu-open':'' }} {{ request()->is('admin/role*')?'menu-open':'' }} {{ request()->is('admin/all-admin-user')?'menu-open':'' }}">
             <a href="#" class="nav-link bg-light  {{ request()->is('admin/assign-role-to-admin*')? 'active':'' }} {{ request()->is('admin/permission*')? 'active':'' }} {{ request()->is('admin/role*')?'active':'' }} {{ request()->is('admin/all-admin-user')?'active':'' }}">
               <i class="nav-icon fas fa-user "></i>
@@ -39,28 +33,35 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+                @if($user->hasPermissionByRole('view permission'))
                 <li class="nav-item">
                     <a href="{{ route('permission.index') }}" class="nav-link {{ request()->is('admin/permission*')? 'active':'' }} ">
                       <i class="far fa-square  nav-icon"></i>
                       <p> Permission</p>
                     </a>
                   </li>
+                @endif
+             @if($user->hasPermissionByRole('view role'))
                 <li class="nav-item">
                 <a href="{{ route('role.index') }}" class="nav-link {{ request()->is('admin/role*')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Role</p>
                 </a>
               </li>
+              @endif
+              @if($user->hasPermissionByRole('assign role'))
               <li class="nav-item">
                 <a href="{{ route('all-admin-user') }}" class="nav-link {{ request()->is('admin/assign-role-to-admin*')?'active':'' }} {{ request()->is('admin/all-admin-user')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Assing Role</p>
                 </a>
               </li>
+              @endif
             </ul>
           </li>
+          @endif
 
-
+          @if($user->hasPermissionByRole('view admin')||$user->hasPermissionByRole('add admin'))
           <li class="nav-item {{ request()->is('admin/all-admins')?'menu-open':'' }} {{ request()->is('admin/create-admin')?'menu-open':'' }} {{ request()->is('admin/edit-admin/*')?'menu-open':'' }}">
             <a href="#" class="nav-link bg-light {{ request()->is('admin/all-admins')? 'active':'' }} {{ request()->is('admin/create-admin')?'active':'' }} {{ request()->is('admin/edit-admin/*')?'active':'' }}">
               <i class="nav-icon fas fa-user "></i>
@@ -70,22 +71,28 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+                @if($user->hasPermissionByRole('view admin'))
                 <li class="nav-item">
                     <a href="{{ url('admin/all-admins') }}" class="nav-link {{ request()->is('admin/all-admins')? 'active':'' }} ">
                       <i class="far fa-square  nav-icon"></i>
                       <p> Admins</p>
                     </a>
                   </li>
+                 @endif
+                 @if($user->hasPermissionByRole('add admin'))
                 <li class="nav-item">
                 <a href="{{ url('admin/create-admin') }}" class="nav-link {{ request()->is('admin/create-admin')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Create Admin</p>
                 </a>
               </li>
+              @endif
 
             </ul>
           </li>
+          @endif
 
+          @if($user->hasPermissionByRole('view user')||$user->hasPermissionByRole('add user'))
           <li class="nav-item {{ request()->is('admin/all-users')?'menu-open':'' }} {{ request()->is('admin/create-user')?'menu-open':'' }} {{ request()->is('admin/edit-user/*')?'menu-open':'' }}">
             <a href="#" class="nav-link bg-light {{ request()->is('admin/all-users')? 'active':'' }} {{ request()->is('admin/create-user')?'active':'' }} {{ request()->is('admin/edit-user/*')?'active':'' }}">
               <i class="nav-icon fas fa-users "></i>
@@ -95,21 +102,27 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-
+             @if($user->hasPermissionByRole('view user'))
               <li class="nav-item">
                 <a href="{{ url('admin/all-users') }}" class="nav-link {{ request()->is('admin/all-users')? 'active':'' }} ">
                   <i class="far fa-square  nav-icon"></i>
                   <p>Users</p>
                 </a>
               </li>
+              @endif
+              @if($user->hasPermissionByRole('add user'))
               <li class="nav-item">
                 <a href="{{ url('admin/create-user') }}" class="nav-link {{ request()->is('admin/create-user')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Create User</p>
                 </a>
               </li>
+              @endif
             </ul>
           </li>
+          @endif
+
+          @if($user->hasPermissionByRole('view contact message'))
           <li class="nav-item {{ request()->is('admin/contact-us')?'menu-open':'' }} ">
             <a href="#" class="nav-link bg-light {{ request()->is('admin/contact-us')? 'active':'' }}">
                 <i class=" fas  fa-database" >
@@ -120,16 +133,19 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
+              @if($user->hasPermissionByRole('view contact message'))
+                <li class="nav-item">
                 <a href="{{ url('admin/contact-us') }}" class="nav-link {{ request()->is('admin/contact-us')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Messages</p>
                 </a>
               </li>
-
+              @endif
             </ul>
           </li>
+          @endif
 
+          @if($user->hasPermissionByRole('view blog') || $user->hasPermissionByRole('view blog category') || $user->hasPermissionByRole('view blog comment'))
 
           <li class="nav-item {{ request()->is('admin/blogs')?'menu-open':'' }}  {{ request()->is('admin/blogs/*')?'menu-open':'' }}  {{ request()->is('admin/blog-comment*')?'menu-open':'' }}  {{ request()->is('admin/blog-categories')?'menu-open':'' }} {{ request()->is('admin/blog/category*')?'menu-open':'' }} ">
             <a href="#" class="nav-link bg-light {{ request()->is('admin/blogs*')?'active':'' }} {{ request()->is('admin/blogs')?'active':'' }}  {{ request()->is('admin/blog-comment*')?'active':'' }}  {{ request()->is('admin/blog-categories')?'active':'' }}  {{ request()->is('admin/blog/category*')?'active':'' }}">
@@ -140,27 +156,36 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              @if($user->hasPermissionByRole('view blog'))
               <li class="nav-item">
                 <a href="{{ route('blogs') }}" class="nav-link {{ request()->is('admin/blogs')?'active':'' }} {{ request()->is('admin/blogs*')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Blogs</p>
                 </a>
               </li>
+              @endif
+              @if($user->hasPermissionByRole('view blog category'))
               <li class="nav-item">
                 <a href="{{ route('blog-categories') }}" class="nav-link {{ request()->is('admin/blog-categories')?'active':'' }} {{ request()->is('admin/blog/category*')?'active':'' }}  ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Blog Categories</p>
                 </a>
               </li>
+              @endif
+              @if($user->hasPermissionByRole('view blog comment'))
               <li class="nav-item">
                 <a href="{{ route('blog-comments') }}" class="nav-link {{ request()->is('admin/blog-comment*')?'active':'' }} {{ request()->is('admin/blog-comment')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Blog Comments</p>
                 </a>
               </li>
+              @endif
             </ul>
           </li>
-          <li class="nav-item {{ request()->is('admin/newslettersubscribers')?'menu-open':'' }}  {{ request()->is('admin/newslettersubscribers/*')?'menu-open':'' }}  {{ request()->is('admin/send-email-to-all')?'menu-open':'' }}">
+          @endif
+
+          @if($user->hasPermissionByRole('view subscribers') || $user->hasPermissionByRole('send email to subscribers'))
+            <li class="nav-item {{ request()->is('admin/newslettersubscribers')?'menu-open':'' }}  {{ request()->is('admin/newslettersubscribers/*')?'menu-open':'' }}  {{ request()->is('admin/send-email-to-all')?'menu-open':'' }}">
             <a href="#" class="nav-link bg-light {{ request()->is('admin/newslettersubscribers*')?'active':'' }} {{ request()->is('admin/newslettersubscribers')?'active':'' }}  {{ request()->is('admin/send-email-to-all')?'active':'' }}">
               <i class="nav-icon fas fa-file"></i>
               <p>
@@ -169,20 +194,27 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              @if($user->hasPermissionByRole('view subscribers'))
               <li class="nav-item">
                 <a href="{{ route('newslettersubscribers') }}" class="nav-link {{ request()->is('admin/newslettersubscribers')?'active':'' }} {{ request()->is('admin/newslettersubscribers*')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>List of Subscribers</p>
                 </a>
               </li>
+              @endif
+              @if($user->hasPermissionByRole('send email to subscribers'))
               <li class="nav-item">
                 <a href="{{ route('send-email-to-all') }}" class="nav-link {{ request()->is('admin/send-email-to-all')?'active':'' }} {{ request()->is('admin/send-email-to-all*')?'active':'' }}  ">
                   <i class="far fa-square nav-icon"></i>
                   <p>Send Email</p>
                 </a>
               </li>
+              @endif
             </ul>
-          </li>
+            </li>
+          @endif
+
+          @if($user->hasPermissionByRole('view course') || $user->hasPermissionByRole('add course') || $user->hasPermissionByRole('view course category'))
           <li class="nav-item {{ request()->is('admin/all-courses')?'menu-open':'' }}  {{ request()->is('admin/courses/*')?'menu-open':'' }}  {{ request()->is('admin/course/*')?'menu-open':'' }} {{ request()->is('admin/course-categories')?'menu-open':'' }}">
             <a href="#" class="nav-link bg-light {{ request()->is('admin/all-courses')?'active':'' }} {{ request()->is('admin/courses/*')?'active':'' }} {{ request()->is('admin/course*')?'active':'' }} {{ request()->is('admin/course-categories')?'active':'' }}">
               <i class="nav-icon fas fa-book"></i>
@@ -193,26 +225,35 @@
             </a>
 
             <ul class="nav nav-treeview">
+            @if($user->hasPermissionByRole('view course'))
               <li class="nav-item">
                 <a href="{{ route('all-courses') }}" class="nav-link {{ request()->is('admin/all-courses')?'active':'' }}  {{ request()->is('admin/course/edit*')?'active':'' }} ">
                   <i class="far fa-square nav-icon"></i>
                   <p>List of Course</p>
                 </a>
               </li>
+            @endif
+            @if($user->hasPermissionByRole('add course'))
               <li class="nav-item">
                 <a href="{{ route('add-course') }}" class="nav-link {{ request()->is('admin/course/add')?'active':'' }}">
                   <i class="far fa-square nav-icon"></i>
                   <p>Create Course</p>
                 </a>
-              </li>
+            </li>
+            @endif
+            @if($user->hasPermissionByRole('view course category'))
               <li class="nav-item">
                 <a href="{{ route('course-categories') }}" class="nav-link {{ request()->is('admin/course/category*')?'active':'' }} {{ request()->is('admin/course-categories')?'active':'' }}" >
                   <i class="far fa-square nav-icon"></i>
                   <p> Course Categories</p>
                 </a>
               </li>
+            @endif
             </ul>
+          </li>
+          @endif
 
+          @if($user->hasPermissionByRole('view order'))
             <li class="nav-item {{ request()->is('admin/course-orders*')?'menu-open':'' }} {{ request()->is('admin/all-orders')?'menu-open':'' }}  {{ request()->is('admin/pdf-orders*')?'menu-open':'' }} {{ request()->is('admin/all-pdf-orders')?'menu-open':'' }}">
                 <a href="javascript:void();" class="nav-link bg-light {{ request()->is('admin/course-orders*')?'active':'' }} {{ request()->is('admin/all-orders')?'active':'' }} {{ request()->is('admin/pdf-orders*')?'active':'' }} {{ request()->is('admin/all-pdf-orders')?'active':'' }}">
                   <i class="nav-icon fas">
@@ -228,6 +269,7 @@
                   </p>
                 </a>
               <ul class="nav nav-treeview">
+                @if($user->hasPermissionByRole('view order'))
                 <li class="nav-item">
                   <a href="{{ route('all-pdf-orders') }}" class="nav-link {{ request()->is('admin/all-pdf-orders')?'active':'' }}  {{ request()->is('admin/pdf-orders*')?'active':'' }}">
                     <i class="far fa-square nav-icon"></i>
@@ -240,8 +282,12 @@
                       <p>Course Orders</p>
                     </a>
                   </li>
+                  @endif
               </ul>
             </li>
+            @endif
+
+            @if($user->hasPermissionByRole('view store'))
             <li class="nav-item {{ request()->is('admin/books')?'menu-open':'' }}  {{ request()->is('admin/books*')?'menu-open':'' }}">
                 <a href="javascript:void();" class="nav-link bg-light {{ request()->is('admin/books')?'active':'' }} {{ request()->is('admin/books*')?'active':'' }}">
                   <i class="nav-icon fas">
@@ -249,23 +295,29 @@
                         <g transform="matrix(1 0 0 1 12 12)" >
                         <path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 6 2 C 4.895 2 4 2.895 4 4 L 4 19 C 4 20.64497 5.3550302 22 7 22 L 20 22 L 20 20 L 7 20 C 6.4349698 20 6 19.56503 6 19 C 6 18.43497 6.4349698 18 7 18 L 20 18 L 20 17 L 20 16 L 20 2 L 16 2 L 16 12 L 13 10 L 10 12 L 10 2 L 6 2 z" stroke-linecap="round" />
                         </g>
-                        </svg>
+                    </svg>
                   </i>
                   <p>
                       Store
                      <i class="fas fa-angle-left right"></i>
                   </p>
                 </a>
-              <ul class="nav nav-treeview">
+
+                <ul class="nav nav-treeview">
+                @if($user->hasPermissionByRole('view store'))
                 <li class="nav-item">
                   <a href="{{ route('books') }}" class="nav-link {{ request()->is('admin/books')?'active':'' }} {{ request()->is('admin/books*')?'active':'' }}">
                     <i class="far fa-square nav-icon"></i>
                     <p>List of Books</p>
                   </a>
                 </li>
+                @endif
               </ul>
             </li>
+            @endif
 
+
+            @if($user->hasPermissionByRole('view slider'))
             <li class="nav-item {{ request()->is('admin/banners')?'menu-open':'' }}  {{ request()->is('admin/banners*')?'menu-open':'' }}">
                 <a href="javascript:void();" class="nav-link bg-light {{ request()->is('admin/banners')?'active':'' }} {{ request()->is('admin/banners*')?'active':'' }}">
                   <i class="nav-icon fas">
@@ -289,6 +341,9 @@
                 </li>
               </ul>
             </li>
+            @endif
+
+            @if($user->hasPermissionByRole('view testmony'))
             <li class="nav-item {{ request()->is('admin/student-says')?'menu-open':'' }}  {{ request()->is('admin/student-says*')?'menu-open':'' }}">
                 <a href="javascript:void();" class="nav-link bg-light {{ request()->is('admin/student-says')?'active':'' }} {{ request()->is('admin/student-says*')?'active':'' }}">
                   <i class="nav-icon fas">
@@ -312,7 +367,9 @@
                 </li>
               </ul>
             </li>
+            @endif
 
+            @if($user->hasPermissionByRole('view faq'))
             <li class="nav-item {{ request()->is('admin/faqs')?'menu-open':'' }}  {{ request()->is('admin/faq*')?'menu-open':'' }}">
                 <a href="javascript:void();" class="nav-link bg-light {{ request()->is('admin/faqs')?'active':'' }} {{ request()->is('admin/faq*')?'active':'' }}">
                     <i class="nav-icon fas">
@@ -337,7 +394,10 @@
                     </li>
                 </ul>
             </li>
-            </li>
+            @endif
+            {{-- </li> --}}
+            @if($user->hasPermissionByRole('view about us'))
+
             <li class="nav-item {{ request()->is('admin/all-about-us')?'menu-open':'' }}  {{ request()->is('admin/about*')?'menu-open':'' }}">
                 <a href="javascript:void();" class="nav-link bg-light {{ request()->is('admin/all-about-us')?'active':'' }} {{ request()->is('admin/about*')?'active':'' }}">
                     <i class="nav-icon fas">
@@ -362,6 +422,7 @@
                     </li>
                 </ul>
             </li>
+            @endif
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

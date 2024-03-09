@@ -1,6 +1,8 @@
 @extends('dashboard.layout_dashboard')
 @section('content')
-
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper p-4" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -22,8 +24,10 @@
     <div class="col-8">
         <div class="card card">
             <div class="card-header">
-              <a href="{{ route('banners') }}" class="btn btn-secondary">All Banners</a>
-            </div>
+                @if ($user && $user->hasPermissionByRole('view slider'))
+                <a href="{{ route('banners') }}" class="btn btn-secondary">All Banners</a>
+                @endif
+             </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <form method="POST" action="{{ route('update_banner') }}" enctype="multipart/form-data">

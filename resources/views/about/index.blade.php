@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -53,6 +56,7 @@
                                                 <tr class="odd">
                                                     <td class="sorting_1 dtr-control" tabindex="0" style="">{{ $ab->id }}</td>
                                                     <td style="" class="">{{ $ab->title }}</td>
+
                                                     <td>
                                                         @if($ab->status==1)
                                                         <a href="javascript:void(0);" class=" bg-success text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Active</a>
@@ -61,10 +65,11 @@
                                                         @endif
                                                     </td>
                                                     <td class="" style="">
+                                                        @if ($user && $user->hasPermissionByRole('edit about us'))
                                                         <a href="{{ url('admin/about/edit/'.$ab->id) }}" class=" btn-sm btn-warning">
                                                            Edit
                                                         </a>
-
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach

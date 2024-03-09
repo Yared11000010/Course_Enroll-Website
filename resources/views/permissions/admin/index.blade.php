@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -69,6 +72,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
+                                                        
                                                         @if($admin->status==1)
                                                         <a href="javascript:void(0);" class=" bg-success text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Active</a>
                                                         @elseif($admin->status==0)
@@ -76,10 +80,11 @@
                                                         @endif
                                                     </td>
                                                     <td class="" style="">
+                                                        @if ($user && $user->hasPermissionByRole('assign role'))
                                                         <a href="{{ url('admin/assign-role-to-admin/'.$admin->id) }}" class=" btn-sm btn-primary">
                                                            Assign Role
                                                         </a>
-
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach

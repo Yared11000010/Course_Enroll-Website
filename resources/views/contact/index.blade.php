@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -59,9 +62,11 @@
                                                     <td style="">{{ $contact->subject }}</td>
                                                     <td style="">{{ $contact->message }}</td>
                                                     <td class="" style="">
+                                                        @if ($user && $user->hasPermissionByRole('delete contact message'))
                                                         <a href="{{ url('admin/delete-message/'.$contact->id) }}"  data-confirm-delete="true" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach

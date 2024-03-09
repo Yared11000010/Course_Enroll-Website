@@ -56,7 +56,11 @@ class BannerController extends Controller
                 Alert::toast('Banner has been saved', 'success');
                 return redirect()->route('banners');
             }
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view slider')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             return view('banner.index', compact('banners'));
             // ... (the rest of your code)
         // } catch (\Illuminate\Validation\ValidationException $e) {
@@ -72,7 +76,11 @@ class BannerController extends Controller
     public function create()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add slider')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             return view('banner.create');
         } catch (\Exception $e) {
             // Handle exceptions or errors
@@ -89,6 +97,11 @@ class BannerController extends Controller
     public function edit($id)
     {
         try {
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit slider')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $banner = Banner::find($id);
             if (!$banner) {
                 // Handle the case where the banner is not found
@@ -106,6 +119,11 @@ class BannerController extends Controller
     public function update(Request $request)
     {
         try {
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit slider')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->method('put')) {
                 // Handle exceptions or errors
                 Alert::toast('something is wrong!!', 'error');
@@ -168,7 +186,11 @@ class BannerController extends Controller
     public function active_banner($banner_id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit slider')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $banner = Banner::find($banner_id);
             $banner->status = 1;
             $banner->update();
@@ -187,7 +209,11 @@ class BannerController extends Controller
     public function inactive_banner($banner_id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit slider')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $banner = Banner::find($banner_id);
             $banner->status = 0;
             $banner->update();
@@ -204,7 +230,11 @@ class BannerController extends Controller
     public function delete($banner_id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete slider')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $banner = Banner::find($banner_id);
 
 

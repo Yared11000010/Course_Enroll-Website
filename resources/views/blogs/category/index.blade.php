@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -27,9 +30,11 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
+                                @if ($user && $user->hasPermissionByRole('add blog category'))
                                 <a href="{{ url('admin/blog/category/add') }}" class="btn btn-sm btn-secondary">
                                     Create Blog Category
                                 </a>
+                                @endif
                             </h3>
                         </div>
                         <!-- /.card-header -->
@@ -56,19 +61,25 @@
                                                     <td class="sorting_1 dtr-control" tabindex="0" style="">{{ $category->id }}</td>
                                                     <td style="" class="">{{ $category->name }}</td>
                                                     <td>
+                                                        @if ($user && $user->hasPermissionByRole('edit blog category'))
                                                         @if($category->status==1)
                                                         <a href="{{ url('admin/blog/category/inactive/'.$category->id) }}" class=" bg-success text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Active</a>
                                                         @elseif($category->status==0)
                                                         <a href="{{ url('admin/blog/category/active/'.$category->id) }}"  class="bg-danger text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Inactive</a>
                                                         @endif
+                                                        @endif
                                                     </td>
                                                     <td class="" style="">
+                                                        @if ($user && $user->hasPermissionByRole('edit blog category'))
                                                         <a href="{{ url('admin/blog/category/edit/'.$category->id) }}" class=" btn-sm">
                                                             <i class="fas fa-edit text-secondary"></i>
                                                         </a>
+                                                        @endif
+                                                        @if ($user && $user->hasPermissionByRole('delete blog category'))
                                                         <a href="{{ url('admin/blog/category/delete/'.$category->id) }}"  data-confirm-delete="true" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach

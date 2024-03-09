@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard\RoleAndPermission;
 use App\Http\Controllers\Controller;
 use App\Models\Roles;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class RoleController extends Controller
@@ -12,10 +13,11 @@ class RoleController extends Controller
     public function index()
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasroleByRole('view role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view role')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+             }
             $roles = Roles::paginate(15);
             return view('role.index', compact('roles'));
         } catch (\Exception $e) {
@@ -27,10 +29,10 @@ class RoleController extends Controller
     public function create()
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasroleByRole('add role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add role')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();            }
             // dd($category);
             return view('role.create');
         } catch (\Exception $e) {
@@ -42,10 +44,10 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasroleByRole('add role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add role')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();            }
             if (!$request->method('post')) {
                 Alert::toast('something is wrong!', 'error');
                 return redirect()->back();
@@ -79,10 +81,10 @@ class RoleController extends Controller
     public function edit($id)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasroleByRole('edit role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit role')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();            }
             $role=roles::find($id);
             return view('role.edit', compact('role'));
         } catch (\Exception $e) {
@@ -94,10 +96,10 @@ class RoleController extends Controller
     public function update(Request $request)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasroleByRole('edit role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit role')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();            }
             if (!$request->method('put')) {
                 Alert::toast('something is wrong!', 'error');
                 return redirect()->back();
@@ -126,10 +128,10 @@ class RoleController extends Controller
     public function destroy($id)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasroleByRole('delete role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete role')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();            }
             $role=roles::findOrFail($id);
             $role->delete();
             Alert::toast('role deleted successfully.', 'error');

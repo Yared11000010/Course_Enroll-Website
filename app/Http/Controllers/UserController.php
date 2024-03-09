@@ -18,19 +18,31 @@ class UserController extends Controller
     //
 
     public function index(){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('view user')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $allusers=User::all();
 
         return view('users.index',compact('allusers'));
     }
 
     public function create(){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('add user')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         return view('users.add');
     }
 
     public function store(Request $request){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('add user')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
             // Validate the incoming request data
         $request->validate([
             'first_name' => 'required|string|max:255',
@@ -55,7 +67,11 @@ class UserController extends Controller
     }
 
     public function edit($id){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('edit user')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $user=User::find($id);
 
         return view('users.edit',compact('user'));
@@ -63,6 +79,11 @@ class UserController extends Controller
 
     public function update(Request $request, $id){
         // Validate the incoming request data
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('edit user')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -87,7 +108,11 @@ class UserController extends Controller
         return redirect()->route('all-users');
     }
     public function delete($id){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('delete user')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $user=User::find($id);
         $user->delete();
 

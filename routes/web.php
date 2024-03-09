@@ -31,6 +31,7 @@ use App\Http\Controllers\Frontend\ContactUsController;
 use App\Http\Controllers\Frontend\LoginRegisterContorller;
 use App\Http\Controllers\Frontend\MainContorller;
 use App\Http\Controllers\Frontend\PaymentController;
+use App\Http\Controllers\YoutubeController;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Artisan;
 
@@ -90,13 +91,14 @@ Route::get('/foo', function () {
 Route::get('/',[MainContorller::class,'index'])->name('frontend');
 
 // Auth::routes();
-
 Auth::routes(['login' => false]);
 
 Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/youtube/{videoId}', [YouTubeController::class, 'displayVideo']);
+Route::post('/decrypt-link', [MainContorller::class, 'decryptLink']);
 
 // for frontend pages
 Route::get('/contact-us',[MainContorller::class,'contact'])->name('contact-us');
@@ -113,6 +115,10 @@ Route::get('shop-details/{id}',[MainContorller::class,'shop_details'])->name('sh
 Route::get('course/detail/{id}',[MainContorller::class,'coursedetails'])->name('course-details');
 
 Route::get('/get-courses-by-category/{categoryId}', [MainContorller::class,'getCoursesByCategory']);
+Route::get('/get-blog-by-category/{blogID}', [MainContorller::class,'getBlogByCategory']);
+Route::post('/search', [MainContorller::class,'search'])->name('search');
+
+Route::get('course-category/{id}',[MainContorller::class,'category'])->name('all-course_category');
 
 Route::get('consltation',[MainContorller::class,'consltation'])->name('consltation');
 
@@ -169,10 +175,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('download-pdf-file/{file}',[MainContorller::class,'download_pdf_file'])->name('download_pdf_file');
     Route::post('check-book-order-transactions',[MainContorller::class,'check_book_order_transactions'])->name('check-book-order-transactions');
 
-    Route::get('/pdf/{id}', [MainContorller::class,'show'])->name('pdf.show');
     Route::get('show-course-pdf/{id}',[MainContorller::class,'show_course_pdf'])->name('show-course-pdf');
 
 });
+    Route::get('/pdf/{id}', [MainContorller::class,'show'])->name('pdf.show');
+    Route::get('/show-course-pdf', 'YourController@show_course_pdf')->name('show_course_pdf');
+
 
 
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PermissionCategory;
 use App\Models\Permissions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PermissionController extends Controller
@@ -13,10 +14,11 @@ class PermissionController extends Controller
     public function index()
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('view permission')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view permission')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+             }
             $permissions = Permissions::paginate(15);
             return view('permissions.index', compact('permissions'));
         } catch (\Exception $e) {
@@ -28,10 +30,11 @@ class PermissionController extends Controller
     public function create()
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('add permission')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add permission')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             // dd($category);
             $permission_category=PermissionCategory::where('status',1)->get();
             return view('permissions.create',compact('permission_category'));
@@ -44,10 +47,11 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('add permission')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add permission')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->method('post')) {
                 Alert::toast('something is wrong!', 'error');
                 return redirect()->back();
@@ -82,10 +86,11 @@ class PermissionController extends Controller
     public function edit($id)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('edit permission')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit permission')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+                  }
             $permission_category=PermissionCategory::where('status',1)->get();
 
             $permission=Permissions::find($id);
@@ -99,10 +104,11 @@ class PermissionController extends Controller
     public function update(Request $request)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('edit permission')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit permission')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+                        }
             if (!$request->method('put')) {
                 Alert::toast('something is wrong!', 'error');
                 return redirect()->back();
@@ -133,10 +139,11 @@ class PermissionController extends Controller
     public function destroy($id)
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('delete permission')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete permission')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+                        }
             $permission=Permissions::findOrFail($id);
             $permission->delete();
             Alert::toast('Permission deleted successfully.', 'error');

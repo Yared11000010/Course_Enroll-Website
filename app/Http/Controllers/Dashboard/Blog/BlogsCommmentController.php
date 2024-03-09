@@ -13,7 +13,11 @@ class BlogsCommmentController extends Controller
 {
 
      public function index(){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('view blog comment')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $all_blog_comments=BlogComment::paginate(10);
 
         return view('blogs.comment.index',compact('all_blog_comments'));
@@ -22,7 +26,11 @@ class BlogsCommmentController extends Controller
      public function delete($id)
      {
          try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete blog comment')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
              $blog = BlogComment::find($id);
              $blog->delete();
 
@@ -38,7 +46,11 @@ class BlogsCommmentController extends Controller
      public function active($id)
      {
          try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog comment')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
              $blog = BlogComment::find($id);
              $blog->status = 1;
              $blog->save();
@@ -55,7 +67,11 @@ class BlogsCommmentController extends Controller
      public function inactive($id)
      {
          try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog comment')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
              $blog = BlogComment::find($id);
              $blog->status = 0;
              $blog->save();

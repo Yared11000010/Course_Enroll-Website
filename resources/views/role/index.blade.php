@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -27,9 +30,11 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
+                                @if ($user && $user->hasPermissionByRole('add role'))
                                 <a href="{{ url('admin/role/create') }}" class=" btn btn-outline-dark text-white">
                                      Create role
                                 </a>
+                                @endif
                             </h3>
                         </div>
                         <!-- /.card-header -->
@@ -65,15 +70,21 @@
                                                         @endif
                                                     </td>
                                                     <td class="" style="">
+                                                        @if ($user && $user->hasPermissionByRole('assign permission'))
                                                         <a href="{{ url('admin/role/'.$role->id.'/permission') }}" class=" btn-sm">
                                                             <i class="fas fa-arrow-circle-up  text-secondary"></i>
                                                         </a>
+                                                        @endif
+                                                        @if ($user && $user->hasPermissionByRole('edit role'))
                                                         <a href="{{ url('admin/role/edit/'.$role->id) }}" class=" btn-sm">
                                                             <i class="fas fa-edit text-secondary"></i>
                                                         </a>
+                                                        @endif
+                                                        @if ($user && $user->hasPermissionByRole('delete role'))
                                                         <a href="{{ url('admin/role/destroy/'.$role->id) }}"  data-confirm-delete="true" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach

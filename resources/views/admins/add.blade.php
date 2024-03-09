@@ -1,5 +1,8 @@
 @extends('dashboard.layout_dashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper p-4" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -21,7 +24,9 @@
     <div class="col-5">
         <div class="card card">
             <div class="card-header">
+              @if ($user && $user->hasPermissionByRole('view admin'))
               <a href="{{ url('admin/all-admins') }}" class="btn btn-secondary">All Admins</a>
+              @endif
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -45,6 +50,9 @@
                         <label for="email" class="form-label">Email Address</label>
                         <input type="email" class="form-control" id="email" name="email"
                             value="{{ old('email') }}" required autocomplete="email">
+                            @error('email')
+                                <span class=" text-danger">{{ $message }}</span>
+                            @enderror
                     </div>
                   </div>
                 </div>

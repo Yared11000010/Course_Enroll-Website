@@ -16,7 +16,11 @@ class BookController extends Controller
     public function index()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view store')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $books = Book::all();
 
             return view('book.index', compact('books'));
@@ -30,7 +34,11 @@ class BookController extends Controller
     public function create()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('create store')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             return view('book.create');
         } catch (\Exception $e) {
             // Handle exceptions or errors
@@ -42,7 +50,11 @@ class BookController extends Controller
     public function store(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('create store')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('post')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -107,7 +119,11 @@ class BookController extends Controller
     public function edit($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit store')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $books = Book::find($id);
 
             return view('book.edit', compact('books'));
@@ -121,7 +137,11 @@ class BookController extends Controller
     public function update(Request $request)
     {
         // try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit store')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('put')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -189,7 +209,11 @@ class BookController extends Controller
     public function delete($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete store')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $book = Book::find($id);
             if ($book->image) {
                 Storage::delete('public/book/' . $book->image);
@@ -210,7 +234,11 @@ class BookController extends Controller
     public function active($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit store')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $book = Book::find($id);
             $book->status = 1;
             $book->save();
@@ -227,7 +255,11 @@ class BookController extends Controller
     public function inactive($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit store')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $book = Book::find($id);
             $book->status = 0;
             $book->save();

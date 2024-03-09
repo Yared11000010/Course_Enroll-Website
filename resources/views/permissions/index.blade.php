@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -27,12 +30,16 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
+                                @if ($user && $user->hasPermissionByRole('add permission'))
                                 <a href="{{ url('admin/permission/create') }}" class=" btn btn-outline-dark text-white">
                                      Create permission
                                 </a>
+                                @endif
+                                @if ($user && $user->hasPermissionByRole('view permission category'))
                                 <a href="{{ route('permission.category.index') }}" class=" btn btn-outline-dark text-white">
                                      permission categories
-                               </a>
+                                </a>
+                                @endif
                             </h3>
                         </div>
                         <!-- /.card-header -->
@@ -60,12 +67,16 @@
                                                     </td>
 
                                                     <td class="" style="">
+                                                        @if ($user && $user->hasPermissionByRole('edit permission'))
                                                         <a href="{{ url('admin/permission/edit/'.$permission->id) }}" class=" btn-sm">
                                                             <i class="fas fa-edit text-secondary"></i>
                                                         </a>
+                                                        @endif
+                                                        @if ($user && $user->hasPermissionByRole('delete permission'))
                                                         <a href="{{ url('admin/permission/destroy/'.$permission->id) }}"  data-confirm-delete="true" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach

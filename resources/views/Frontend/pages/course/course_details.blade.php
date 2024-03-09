@@ -19,7 +19,7 @@
                                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                                     <div class="course-details-overview-top">
                                         <p class="course-details-overview-para"></p>
-                                        <p>{{ $course->description }}</p>
+                                        <p>{!! $course->description !!}</p>
                                     </div>
 
                                 </div>
@@ -110,7 +110,7 @@
                                     <h1><a href="{{ url('course/detail/'.$latest->id) }}">{{ $latest->title }}</a></h1>
                                 </div>
                                 <div class="courses-pricing-3">
-                                    <span> $ {{ $latest->price }}</span>
+                                    <span> {{ $latest->price }} Birr</span>
                                 </div>
                             </div>
                             <div class="courses-para mt-15">

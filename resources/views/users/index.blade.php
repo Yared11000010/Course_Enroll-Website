@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$userss = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -27,9 +30,12 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
+                                @if ($userss && $userss->hasPermissionByRole('add user'))
                                 <a href="{{ url('admin/create-user') }}" class="btn btn-sm btn-secondary">
                                      Add user
                                 </a>
+                                @endif
+
                             </h3>
                         </div>
                         <!-- /.card-header -->
@@ -61,12 +67,16 @@
                                                     <td style="">{{ $user->email }}</td>
                                                     <td class="" style="">{{ $user->mobile }}</td>
                                                     <td class="" style="">
+                                                        @if ($userss && $userss->hasPermissionByRole('edit user'))
                                                         <a href="{{ url('admin/edit-user/'.$user->id) }}" class=" btn-sm">
                                                             <i class="fas fa-edit text-secondary"></i>
                                                         </a>
+                                                        @endif
+                                                        @if ($userss && $userss->hasPermissionByRole('delete user'))
                                                         <a href="{{ url('admin/delete-user/'.$user->id) }}" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach

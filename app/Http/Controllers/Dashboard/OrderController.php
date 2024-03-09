@@ -9,6 +9,7 @@ use App\Models\PdfOrder;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -16,6 +17,11 @@ class OrderController extends Controller
 {
     //
     public function index(){
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('view order')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $all_order=Order::with('user','course')->get();
         // dd($all_order);
        return view('order.course_order.index',compact('all_order'));
@@ -25,7 +31,11 @@ class OrderController extends Controller
     public function delete($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete order')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $Order = Order::find($id);
             $Order->delete();
             Alert::toast('Order has been deleted successfully!', 'error');
@@ -39,7 +49,11 @@ class OrderController extends Controller
 
 
     public function update_payment(Request $request){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('edit order')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $order=Order::find($request->input('id'));
 
         $user_id=$request->input('user_id');
@@ -112,19 +126,34 @@ class OrderController extends Controller
     }
 
     public function view($id){
-
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('view payment receipt')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $order=Order::where('id',$id)->first();
 
         return view('order.course_order.image',compact('order'));
     }
 
     public function view_pdf($id){
+
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('view payment receipt')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $pdforder=PdfOrder::where('id',$id)->first();
 
         return view('order.book_order.image',compact('pdforder'));
     }
 
     public function detail($id){
+        $user = Auth::guard('admin')->user();
+        if (!$user || !$user->hasPermissionByRole('view order')) {
+            Alert::toast('You dont have access to this page.','error');
+            return redirect()->back();
+        }
         $order=Order::with('user','course')->where('id',$id)->first();
      return view('order.course_order.detail',compact('order'));
     }

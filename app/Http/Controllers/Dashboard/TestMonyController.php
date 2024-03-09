@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Testmony;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class TestMonyController extends Controller
@@ -12,7 +13,11 @@ class TestMonyController extends Controller
     public function index()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view testmony')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $Testmonys = Testmony::all();
 
             return view('testmony.index', compact('Testmonys'));
@@ -26,7 +31,11 @@ class TestMonyController extends Controller
     public function create()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add testmony')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             return view('testmony.create');
         } catch (\Exception $e) {
             // Handle exceptions or errors
@@ -38,7 +47,11 @@ class TestMonyController extends Controller
     public function store(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add testmony')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('post')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -71,7 +84,11 @@ class TestMonyController extends Controller
     public function edit($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit testmony')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $testmony = Testmony::find($id);
             return view('testmony.edit', compact('testmony'));
         } catch (\Exception $e) {
@@ -84,7 +101,11 @@ class TestMonyController extends Controller
     public function update(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit testmony')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('put')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -117,7 +138,11 @@ class TestMonyController extends Controller
     public function delete($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete testmony')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $Testmony = Testmony::find($id);
             $Testmony->delete();
             Alert::toast('Testmony has been deleted successfully!', 'error');
@@ -132,7 +157,11 @@ class TestMonyController extends Controller
     public function active($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit testmony')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $Testmony = Testmony::find($id);
             $Testmony->status = 1;
             $Testmony->save();
@@ -149,7 +178,11 @@ class TestMonyController extends Controller
     public function inactive($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit testmony')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $Testmony = Testmony::find($id);
             $Testmony->status = 0;
             $Testmony->save();

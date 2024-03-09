@@ -17,7 +17,11 @@ class BlogsController extends Controller
     public function index()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view blog')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $blogs = Blogs::all();
 
             return view('blogs.index', compact('blogs'));
@@ -31,7 +35,11 @@ class BlogsController extends Controller
     public function create()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add blog')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $blog_category=BlogCategory::where('status',1)->get();
             return view('blogs.create',compact('blog_category'));
         } catch (\Exception $e) {
@@ -44,7 +52,11 @@ class BlogsController extends Controller
     public function store(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add blog')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('post')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -99,7 +111,11 @@ class BlogsController extends Controller
     public function edit($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $blog_category=BlogCategory::where('status',1)->get();
             $blogs = Blogs::find($id);
 
@@ -114,7 +130,11 @@ class BlogsController extends Controller
     public function update(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('put')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -165,7 +185,11 @@ class BlogsController extends Controller
     public function delete($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete blog')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $blog = Blogs::find($id);
             if ($blog->image) {
                 Storage::delete('public/blog/' . $blog->image);
@@ -183,7 +207,11 @@ class BlogsController extends Controller
     public function active($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $blog = Blogs::find($id);
             $blog->status = 1;
             $blog->save();
@@ -200,7 +228,11 @@ class BlogsController extends Controller
     public function inactive($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit blog')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $blog = Blogs::find($id);
             $blog->status = 0;
             $blog->save();

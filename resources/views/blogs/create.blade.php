@@ -1,6 +1,8 @@
 @extends('dashboard.layout_dashboard')
 @section('content')
-
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper p-4" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -22,7 +24,9 @@
     <div class="col-8">
         <div class="card card">
             <div class="card-header">
+              @if($user && $user->hasPermissionByRole('view blog'))
               <a href="{{ route('blogs') }}" class="btn btn-secondary">All Blogs</a>
+              @endif
             </div>
             <!-- /.card-header -->
             <div class="card-body">

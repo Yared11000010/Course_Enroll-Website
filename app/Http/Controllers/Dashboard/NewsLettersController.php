@@ -16,7 +16,11 @@ class NewsLettersController extends Controller
     public function create()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('send email to subscribers')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $all_users = User::all();
             // dd($all_users);
             return view('newsletter.send_email_all_users', compact('all_users'));
@@ -30,7 +34,11 @@ class NewsLettersController extends Controller
     public function send(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('send email to subscribers')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->method('post')) {                // Log or handle the exception as needed
                 Alert::toast('something is wrong!!', 'error');
                 return redirect()->back();
@@ -58,7 +66,11 @@ class NewsLettersController extends Controller
     public function index()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view subscribers')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $allnewsletter = NewsLetter::all()->toArray();
             return view('newsletter.allnewsletters', compact('allnewsletter'));
         } catch (\Exception $e) {
@@ -70,7 +82,11 @@ class NewsLettersController extends Controller
     public function delete($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete subscribers')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $news = NewsLetter::find($id);
             $news->delete();
             Alert::toast('Newsletters has been deleted!', 'error');
@@ -85,7 +101,11 @@ class NewsLettersController extends Controller
     public function active($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit subscribers')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $news = NewsLetter::find($id);
             $news->status = 1;
             $news->update();
@@ -101,7 +121,11 @@ class NewsLettersController extends Controller
     public function inactive($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit subscribers')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $news = NewsLetter::find($id);
             $news->status = 0;
             $news->update();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard\Course;
 use App\Http\Controllers\Controller;
 use App\Models\CourseCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CourseCategoryController extends Controller
@@ -12,7 +13,11 @@ class CourseCategoryController extends Controller
     public function index()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view course category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $course_categories = CourseCategory::paginate(10);
             return view('course.category.index', compact('course_categories'));
         } catch (\Exception $e) {
@@ -25,7 +30,11 @@ class CourseCategoryController extends Controller
     public function create()
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add course category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             return view('course.category.create');
         } catch (\Exception $e) {
             // Handle exceptions or errors
@@ -37,7 +46,11 @@ class CourseCategoryController extends Controller
     public function store(Request $request)
     {
         // try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add course category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('post')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -68,7 +81,11 @@ class CourseCategoryController extends Controller
     public function edit($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit course category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $course_categories = CourseCategory::find($id);
             return view('course.category.edit', compact('course_categories'));
 
@@ -82,7 +99,11 @@ class CourseCategoryController extends Controller
     public function update(Request $request)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit course category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             if (!$request->isMethod('put')) {
                 // Handle the error - Method not allowed
                 Alert::toast('Method not allowed', 'error');
@@ -109,7 +130,11 @@ class CourseCategoryController extends Controller
     public function delete($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('delete course category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $category = CourseCategory::find($id);
             $category->delete();
 
@@ -125,8 +150,11 @@ class CourseCategoryController extends Controller
     public function active($id)
     {
         try {
-
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit course category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $category = CourseCategory::find($id);
             $category->status = 1;
             $category->save();
@@ -143,7 +171,11 @@ class CourseCategoryController extends Controller
     public function inactive($id)
     {
         try {
-
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit course category')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+            }
             $category = CourseCategory::find($id);
             $category->status = 0;
             $category->save();

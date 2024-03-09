@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Roles;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminController extends Controller
@@ -13,10 +14,11 @@ class AdminController extends Controller
     public function index()
     {
         try {
-            // $user = Auth::guard('admin')->user();
-            // if (!$user || !$user->hasPermissionByRole('view_admin')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('view admin')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();
+             }
 
             $admins= Admin::paginate(4);
             return view('permissions.admin.index', compact('admins'));
@@ -29,10 +31,10 @@ class AdminController extends Controller
     public function assignRole($id)
     {
         try {
-            // $users = Auth::guard('admin')->user();
-            // if (!$users || !$users->hasPermissionByRole('assign_role')) {
-            //     return view('admin.errors.unauthorized');
-            // }
+            $users = Auth::guard('admin')->user();
+            if (!$users || !$users->hasPermissionByRole('assign role')) {
+                Alert::toast('You dont have access to this page.','error');
+                return redirect()->back();            }
 
             $roles = Roles::all();
             $admin=Admin::findOrFail($id);

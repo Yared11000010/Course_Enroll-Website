@@ -1,6 +1,9 @@
 
 @extends('dashboard.maindashboard')
 @section('content')
+@php
+$user = Auth::guard('admin')->user();
+@endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -58,16 +61,20 @@
                                                     </td>
                                                     <td style="" class="">{{ $newsletter['email'] }}</td>
                                                     <td>
+                                                        @if ($user && $user->hasPermissionByRole('edit subscribers'))
                                                         @if($newsletter['status']==1)
                                                         <a href="{{ url('admin/newslettersubscribers/inactive/'.$newsletter['id']) }}" class=" bg-success text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Active</a>
                                                         @elseif($newsletter['status']==0)
                                                         <a href="{{ url('admin/newslettersubscribers/active/'.$newsletter['id']) }}"  class="bg-danger text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Inactive</a>
                                                         @endif
+                                                        @endif
                                                     </td>
                                                     <td class="" style="">
+                                                        @if ($user && $user->hasPermissionByRole('delete subscribers'))
                                                         <a href="{{ url('admin/newslettersubscribers/delete/'.$newsletter['id']) }}"  data-confirm-delete="true" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach
