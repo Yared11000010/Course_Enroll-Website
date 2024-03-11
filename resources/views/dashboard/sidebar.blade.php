@@ -214,9 +214,9 @@
             </li>
           @endif
 
-          @if($user->hasPermissionByRole('view course') || $user->hasPermissionByRole('add course') || $user->hasPermissionByRole('view course category'))
-          <li class="nav-item {{ request()->is('admin/all-courses')?'menu-open':'' }}  {{ request()->is('admin/courses/*')?'menu-open':'' }}  {{ request()->is('admin/course/*')?'menu-open':'' }} {{ request()->is('admin/course-categories')?'menu-open':'' }}">
-            <a href="#" class="nav-link bg-light {{ request()->is('admin/all-courses')?'active':'' }} {{ request()->is('admin/courses/*')?'active':'' }} {{ request()->is('admin/course*')?'active':'' }} {{ request()->is('admin/course-categories')?'active':'' }}">
+          @if($user->hasPermissionByRole('view course') || $user->hasPermissionByRole('add course') || $user->hasPermissionByRole('view course category') || $user->hasPermissionByRole('view lesson'))
+          <li class="nav-item {{ request()->is('admin/all-courses')?'menu-open':'' }}  {{ request()->is('admin/courses/*')?'menu-open':'' }}  {{ request()->is('admin/course/*')?'menu-open':'' }} {{ request()->is('admin/all-lessons')?'menu-open':'' }} {{ request()->is('admin/course-categories')?'menu-open':'' }} {{ request()->is('admin/lesson*')?'menu-open':'' }}">
+            <a href="#" class="nav-link bg-light {{ request()->is('admin/all-courses')?'active':'' }}  {{ request()->is('admin/all-lessons')?'active':'' }} {{ request()->is('admin/lesson/*')?'active':'' }} {{ request()->is('admin/courses/*')?'active':'' }} {{ request()->is('admin/course*')?'active':'' }} {{ request()->is('admin/course-categories')?'active':'' }}">
               <i class="nav-icon fas fa-book"></i>
               <p>
                  Courses
@@ -233,11 +233,11 @@
                 </a>
               </li>
             @endif
-            @if($user->hasPermissionByRole('add course'))
+            @if($user->hasPermissionByRole('add lesson'))
               <li class="nav-item">
-                <a href="{{ route('add-course') }}" class="nav-link {{ request()->is('admin/course/add')?'active':'' }}">
+                <a href="{{ route('all-lessons') }}" class="nav-link {{ request()->is('admin/all-lessons')?'active':'' }} {{ request()->is('admin/lesson*')?'active':'' }}">
                   <i class="far fa-square nav-icon"></i>
-                  <p>Create Course</p>
+                  <p>List of Lesson</p>
                 </a>
             </li>
             @endif

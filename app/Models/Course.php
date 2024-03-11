@@ -23,4 +23,9 @@ class Course extends Model
     {
         return $this->hasMany(CoursePDF::class);
     }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
 }

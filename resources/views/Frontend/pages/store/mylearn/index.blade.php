@@ -92,7 +92,6 @@
                                 </div>
                                 &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
                                 <a href="{{ url('my-pdf/'.$book->order_code) }}" class="btn btn-primary">view</a>
-
                                 {{-- <a href="{{ route('pdf.show', ['id' => $book->id]) }}" target="_blank">View PDF</a> --}}
                                 @endif
                             </div>

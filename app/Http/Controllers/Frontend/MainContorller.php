@@ -13,6 +13,7 @@ use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\CoursePDF;
 use App\Models\FAQ;
+use App\Models\Lesson;
 use App\Models\NewsLetter;
 use App\Models\Order;
 use App\Models\PdfOrder;
@@ -101,7 +102,7 @@ class MainContorller extends Controller
 
     public function courses(){
 
-        $courses=Course::with('category','youtubeLinks','pdfs')->where('status',1)->where('type','paid')->get();
+        $courses=Course::with('category','youtubeLinks','pdfs','lessons')->where('status',1)->where('type','paid')->get();
         // dd($courses);
         return view('Frontend.pages.course.course',compact('courses'));
     }
@@ -111,7 +112,7 @@ class MainContorller extends Controller
         $category=CourseCategory::with('courses')->get();
         $latestCourse=Course::latest()->take(3)->get();
         $fivecourse=Course::latest()->take(5)->get();
-        $course=Course::with('category','youtubeLinks','pdfs')->where('course_code',$id)->first();
+        $course=Course::with('category','youtubeLinks','pdfs','lessons')->where('course_code',$id)->first();
         // dd($course);
         return view('Frontend.pages.course.course_details',compact('course','latestCourse','fivecourse','category'));
     }
@@ -144,12 +145,17 @@ class MainContorller extends Controller
 
           // Encrypt the link
           $encryptedLink = Crypt::encryptString($googleDriveLink);
-        $course=Course::with('category','youtubeLinks','pdfs')->where('type','free')->get();
-        foreach( $course as $cor){
-         $cor->where('course_code',$course_code)->first();
-         }
+        $cor=Course::with('category','youtubeLinks','pdfs','lessons')->where('type','free')->where('course_code',$course_code)->first();
+        // dd($cor);
+        // foreach( $course as $cor){
+        //  $cor->where('course_code',$course_code)->first();
+        //  }
+        //  dd($cor);
+         $lessons=Lesson::where('course_id',$cor->id)->paginate(1);
+        //  dd($lessons);
 
-        return view('Frontend.pages.course.free_course.details',compact('cor','encryptedLink'));
+        //   dd($cor);
+        return view('Frontend.pages.course.free_course.details',compact('cor','encryptedLink','lessons'));
     }
 
     public function decryptLink(Request $request)
@@ -234,12 +240,24 @@ class MainContorller extends Controller
 
 
     public function show_course_pdf($id){
-         $course_pdf=CoursePDF::findOrFail($id);
-         //  dd($course_pdf);
-         $pdfPath = storage_path('app/public/course/' . $course_pdf->file_path);
+         $course_pdf=Course::findOrFail($id);
+        //   dd($course_pdf);
+         $pdfPath = storage_path('app/public/course/' . $course_pdf->pdf_file);
          return response()->file($pdfPath);
     }
 
+    public function show_lesson_pdf($id){
+        $lesson_pdf=Lesson::findOrFail($id);
+        $pdfPath = storage_path('app/public/lesson/' . $lesson_pdf->pdf_file);
+        return response()->file($pdfPath);
+   }
+
+   public function show_paid_lesson_pdf($id){
+    $lesson_pdf=Lesson::findOrFail($id);
+    //  dd($lesson_pdf);
+    $pdfPath = storage_path('app/public/lesson/' . $lesson_pdf->pdf_file);
+    return response()->file($pdfPath);
+    }
 
 
     public function mypdf_detail($order_code){
@@ -317,8 +335,7 @@ class MainContorller extends Controller
 
 
     public function mylearn_detail($course_code){
-        $course=Course::with('category','youtubeLinks','pdfs')->where('course_code',$course_code)->first();
-
+        $course=Course::with('category','youtubeLinks','pdfs','lessons')->where('course_code',$course_code)->first();
         // dd($course);
         $courses=Order::where('course_id', $course->id)
         ->where('user_id', Auth::id())
@@ -326,7 +343,8 @@ class MainContorller extends Controller
         ->first();
         // dd($courses);
         if ($courses) {
-            return view('Frontend.pages.course.mylearn.mylearn_detail',compact('course'));
+            $lessons=Lesson::where('course_id',$course->id)->paginate(1);
+            return view('Frontend.pages.course.mylearn.mylearn_detail',compact('course','lessons'));
         } else {
             Alert::toast('No such course is available','error');
             return redirect()->back();

@@ -89,33 +89,17 @@ $user = Auth::guard('admin')->user();
                     <div class="col-sm-10">
                         <div class="form-group">
                             <label for="pdf">Course PDF Files</label>
-                            <input type="file" name="pdf[]" multiple class="form-control">
+                            <input type="file" name="pdf" multiple class="form-control">
                             @error('pdf')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
-                            @foreach ($course->pdfs as $index => $link)
-                            <a href="">{{ $link->file_path }}</a> <br>
-                            @endforeach
+                            @if ($course->pdf_file)
+                            <a href="">{{ $course->pdf_file }}</a> <br>
+                            @endif
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-10">
-                        <table class="table table-bordered" id="dynamicAddRemove">
-                            <tr>
-                                <th>YouTube Link</th>
-                                <th>Action</th>
-                            </tr>
-                            @foreach ($course->youtubeLinks as $index => $link)
-                            <tr>
-                                <td><input type="text" name="addMoreInputFields[{{ $index }}][subject]" value="{{ $link->youtube_link }}" placeholder="Enter Link" class="form-control"></td>
-                                <td><button type="button" class="btn btn-outline-danger text-white remove-input-field">Delete</button></td>
-                            </tr>
-                            @endforeach
-                        </table>
-                        <button type="button" name="add" id="dynamic-ar" class="btn btn-outline-primary text-white">Add Link</button>
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="form-group">

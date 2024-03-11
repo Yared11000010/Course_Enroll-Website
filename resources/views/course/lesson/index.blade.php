@@ -5,24 +5,22 @@
 $user = Auth::guard('admin')->user();
 @endphp
 <div class="content-wrapper" style="min-height: 1302.4px;">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Course</h1>
+                    <h1>Lesson</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="javascript:void();">Home</a></li>
-                        <li class="breadcrumb-item active">Course</li>
+                        <li class="breadcrumb-item active">lesson</li>
                     </ol>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -31,11 +29,10 @@ $user = Auth::guard('admin')->user();
                         <div class="card-header">
                             <h3 class="card-title">
                                 @if ($user && $user->hasPermissionByRole('add course'))
-                                <a href="{{ url('admin/course/add') }}" class=" btn btn-outline-dark text-white">
-                                     Create course
+                                <a href="{{ url('admin/lesson/add') }}" class=" btn btn-outline-dark text-white">
+                                     Create lesson
                                 </a>
                                 @endif
-                                
                             </h3>
                         </div>
                         <!-- /.card-header -->
@@ -54,38 +51,35 @@ $user = Auth::guard('admin')->user();
                                                     <th class="sorting">Title</th>
                                                     <th class="sorting">Image</th>
                                                     <th class="sorting">Status</th>
-                                                    <th class="sorting">Price</th>
                                                     <th class="sorting">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($allcourses as $course )
+                                                @foreach ($alllessons as $lesson )
                                                 <tr class="odd">
-                                                    <td class="sorting_1 dtr-control" tabindex="0" style="">{{ $course->id }}</td>
-                                                    <td style="" class="">{{ $course->title }}</td>
+                                                    <td class="sorting_1 dtr-control" tabindex="0" style="">{{ $lesson->id }}</td>
+                                                    <td style="" class="">{{ $lesson->title }}</td>
                                                     <td style="">
-                                                        <img src="{{ asset('/storage/course/'.$course->image) }}" style="width: 80px; height:40px; padding-top:3px;" alt="">
+                                                        <img src="{{ asset('/storage/lesson/'.$lesson->image) }}" style="width: 80px; height:40px; padding-top:3px;" alt="">
                                                     </td>
                                                     <td>
                                                         @if ($user && $user->hasPermissionByRole('edit course'))
-                                                        @if($course->status==1)
-                                                        <a href="{{ url('admin/course/inactive/'.$course->id) }}" class=" bg-success text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Active</a>
-                                                        @elseif($course->status==0)
-                                                        <a href="{{ url('admin/course/active/'.$course->id) }}"  class="bg-danger text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Inactive</a>
+                                                        @if($lesson->status==1)
+                                                        <a href="{{ url('admin/lesson/inactive/'.$lesson->id) }}" class=" bg-success text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Active</a>
+                                                        @elseif($lesson->status==0)
+                                                        <a href="{{ url('admin/lesson/active/'.$lesson->id) }}"  class="bg-danger text-white text-sm px-2 py-1" style="border-radius: 0.2rem;">Inactive</a>
                                                         @endif
                                                         @endif
                                                     </td>
-                                                    <td>
-                                                        {{ $course->price }}
-                                                    </td>
+
                                                     <td class="" style="">
                                                         @if ($user && $user->hasPermissionByRole('edit course'))
-                                                        <a href="{{ url('admin/course/edit/'.$course->id) }}" class=" btn-sm">
+                                                        <a href="{{ url('admin/lesson/edit/'.$lesson->id) }}" class=" btn-sm">
                                                             <i class="fas fa-edit text-secondary"></i>
                                                         </a>
                                                         @endif
                                                         @if ($user && $user->hasPermissionByRole('delete course'))
-                                                        <a href="{{ url('admin/course/delete/'.$course->id) }}"  data-confirm-delete="true" class=" btn-sm">
+                                                        <a href="{{ url('admin/lesson/delete/'.$lesson->id) }}"  data-confirm-delete="true" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
                                                         @endif
@@ -94,11 +88,9 @@ $user = Auth::guard('admin')->user();
                                                 @endforeach
 
                                             </tbody>
-
                                         </table>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <!-- /.card-body -->

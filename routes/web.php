@@ -13,6 +13,7 @@ use App\Http\Controllers\Dashboard\RoleAndPermission\AdminController as AAdminCo
 use App\Http\Controllers\Dashboard\Course\CourseCategoryController;
 use App\Http\Controllers\Dashboard\Course\CourseController;
 use App\Http\Controllers\Dashboard\FAQController;
+use App\Http\Controllers\Dashboard\Course\Lesson\LessonController;
 use App\Http\Controllers\Dashboard\NewsLettersController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\RoleAndPermission\AdminController as RoleAndPermissionAdminController;
@@ -175,12 +176,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('download-pdf-file/{file}',[MainContorller::class,'download_pdf_file'])->name('download_pdf_file');
     Route::post('check-book-order-transactions',[MainContorller::class,'check_book_order_transactions'])->name('check-book-order-transactions');
 
-    Route::get('show-course-pdf/{id}',[MainContorller::class,'show_course_pdf'])->name('show-course-pdf');
+    Route::get('show-paid-lesson-pdf/{id}',[MainContorller::class,'show_paid_lesson_pdf'])->name('show-paid-lesson-pdf');
+
 
 });
     Route::get('/pdf/{id}', [MainContorller::class,'show'])->name('pdf.show');
-    Route::get('/show-course-pdf', 'YourController@show_course_pdf')->name('show_course_pdf');
 
+    Route::get('show-course-pdf/{id}',[MainContorller::class,'show_course_pdf'])->name('show-course-pdf');
+    Route::get('show-lesson-pdf/{id}',[MainContorller::class,'show_lesson_pdf'])->name('show-lesson-pdf');
 
 
 
@@ -277,6 +280,16 @@ Route::prefix('admin')->group(function(){
         Route::get('course/delete/{id}',[CourseController::class,'delete'])->name('delete-course');
         Route::get('course/active/{id}',[CourseController::class,'active'])->name('active-course');
         Route::get('course/inactive/{id}',[CourseController::class,'inactive'])->name('inactive-course');
+
+    //for course lesson
+        Route::get('all-lessons',[LessonController::class,'index'])->name('all-lessons');
+        Route::get('lesson/add',[LessonController::class,'create'])->name('add-lesson');
+        Route::post('lesson/store',[LessonController::class,'store'])->name('store-lesson');
+        Route::get('lesson/edit/{id}',[LessonController::class,'edit'])->name('edit-lesson');
+        Route::put('lesson/update',[LessonController::class,'update'])->name('update-lesson');
+        Route::get('lesson/delete/{id}',[LessonController::class,'delete'])->name('delete-lesson');
+        Route::get('lesson/active/{id}',[LessonController::class,'active'])->name('active-lesson');
+        Route::get('lesson/inactive/{id}',[LessonController::class,'inactive'])->name('inactive-lesson');
 
             //routing for blog category
       Route::get('course-categories',[CourseCategoryController::class,'index'])->name('course-categories');
