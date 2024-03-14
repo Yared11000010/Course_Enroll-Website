@@ -15,7 +15,6 @@
                         </div>
                         <h5>{{ $blogs->title }}</h5>
                         <p>{!!$blogs->description !!}</p>
-
                         <div class="blog-wrapper-footer">
                             <div class="news-wrapper-tags">
                                 <div class="row">
@@ -61,22 +60,7 @@
                                     </div>
                                 </div>
                                 @endforeach
-                                {{-- <ul class="comments-reply">
-                                    <li>
-                                        <div class="comments-box d-flex">
-                                            <div class="comments-avatar">
-                                                <img src="img/comments/comments_02.png" alt="">
-                                            </div>
-                                            <div class="comments-text">
-                                                <div class="avatar-name">
-                                                    <h5>Angelina</h5>
-                                                </div>
-                                                <p>Norem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore worth.</p>
-                                                <a href="#">Reply</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul> --}}
+
                             </li>
 
                         </ul>
@@ -106,7 +90,7 @@
             </div>
             <div class="col-xl-4 col-lg-4">
                 <div class="courses-details-sidebar-area">
-                    
+
                     <div class="widget mb-40 widget-padding white-bg">
                         <h4 class="widget-title">Recent Posts</h4>
                         <div class="sidebar-rc-post">

@@ -21,7 +21,7 @@ $user = Auth::guard('admin')->user();
         </div><!-- /.container-fluid -->
     </section>
 <div class="row">
-    <div class="col-5">
+    <div class="col-10">
         <div class="card card">
             <div class="card-header">
                 @if ($user && $user->hasPermissionByRole('view about us'))
@@ -33,10 +33,43 @@ $user = Auth::guard('admin')->user();
                 <form method="POST" action="{{ route('update-about') }}">
                     @csrf
                     @method('PUT')
+                    <div class="col-sm-10">
+                        <div class="px-4 bg-light">
+                            <h1 class="text-bold pt-4" style="font-size: 20px;">Contact Us settings</h1><br>
+                         </div>
+                     </div>
                  <div class="row">
                   <div class="col-sm-10">
                     <div class="form-group">
                         <input type="hidden" name="id" value="{{ $about->id }}">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" value="{{ $about->email }}" class="form-control" id="email" name="email"
+                            required autocomplete="email">
+                    </div>
+                  </div>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                        <label for="mobile" class="form-label">mobile</label>
+                        <input type="text" value="{{ $about->mobile }}" class="form-control" id="mobile" name="mobile"
+                            required autocomplete="mobile">
+                    </div>
+                  </div>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                        <label for="address" class="form-label">address</label>
+                        <input type="text" value="{{ $about->address }}" class="form-control" id="address" name="address"
+                            required autocomplete="address">
+                    </div>
+                  </div>
+                 </div>
+                 <div class="col-sm-10">
+                    <div class="px-4 bg-light">
+                        <h1 class="text-bold pt-4" style="font-size: 20px;">About Us settings</h1><br>
+                     </div>
+                 </div>
+                 <div class="row">
+                  <div class="col-sm-10">
+                    <div class="form-group">
                         <label for="title" class="form-label">Title</label>
                         <input type="text" value="{{ $about->title }}" class="form-control" id="title" name="title"
                             required autocomplete="title">

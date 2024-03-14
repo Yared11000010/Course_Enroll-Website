@@ -69,27 +69,7 @@
                                 @endif
                                 <div class="ml-5"></div>
                                 @if ($order && $order->status === "paid")
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal{{ $book->id }}">
-                                    Open PDF
-                                </button>
-                                <!-- Modal -->
-                                <div class="modal fade" id="pdfModal{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel{{ $book->id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="pdfModalLabel{{ $book->id }}">PDF Viewer</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div style="width: 100%; height: 800px;">
-                                                    <iframe src="{{ route('pdf.show', ['id' => $book->id]) }}" width="100%" height="100%" style="border: none;"></iframe>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <a href="{{ url('paid-pdf-view/'.$book->order_code) }}"  class="btn btn-primary" target="_blank">Open PDF</a>
                                 &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
                                 <a href="{{ url('my-pdf/'.$book->order_code) }}" class="btn btn-primary">view</a>
                                 {{-- <a href="{{ route('pdf.show', ['id' => $book->id]) }}" target="_blank">View PDF</a> --}}

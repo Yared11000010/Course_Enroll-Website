@@ -117,6 +117,10 @@ Route::get('course/detail/{id}',[MainContorller::class,'coursedetails'])->name('
 
 Route::get('/get-courses-by-category/{categoryId}', [MainContorller::class,'getCoursesByCategory']);
 Route::get('/get-blog-by-category/{blogID}', [MainContorller::class,'getBlogByCategory']);
+
+Route::get('/get-free-course-lesson/{id}', [MainContorller::class,'getFreeCourseLesson']);
+Route::get('/get-paid-course-lesson/{id}', [MainContorller::class,'getPaidCourseLesson']);
+
 Route::post('/search', [MainContorller::class,'search'])->name('search');
 
 Route::get('course-category/{id}',[MainContorller::class,'category'])->name('all-course_category');
@@ -139,7 +143,8 @@ Route::get('free-course-detail/{course_code}',[MainContorller::class,'freecourse
 
 Route::get('free-pdf',[MainContorller::class,'freepdf'])->name('free-pdf');
 Route::get('free-pdf-detail/{order_code}',[MainContorller::class,'freepdfetails'])->name('free-pdf-details');
-
+Route::get('free-pdf-view/{order_code}',[MainContorller::class,'view_free_pdf'])->name('free-pdf-view');
+Route::get('paid-pdf-view/{order_code}',[MainContorller::class,'view_my_pdf'])->name('paid-pdf-view');
 
 //forget password
 

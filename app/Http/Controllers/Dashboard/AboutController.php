@@ -62,6 +62,9 @@ class AboutController extends Controller
 
             $about = AboutUs::find($request->input('id'));
             $about->title = $request->input('title');
+            $about->email= $request->input('email');
+            $about->mobile=$request->input('mobile');
+            $about->address=$request->input('address');
             $about->description = $request->input('description');
             $about->save();
 

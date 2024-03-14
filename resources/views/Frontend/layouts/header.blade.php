@@ -41,6 +41,7 @@ $count =0 ;
     <link rel="stylesheet" href="{{asset('frontend/css/default.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/css/responsive.css')}}">
+
 </head>
 
 <body>

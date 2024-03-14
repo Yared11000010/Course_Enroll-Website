@@ -1,13 +1,53 @@
-User
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Drive Video Player</title>
+  <title>Embedded YouTube Video</title>
+  <style>
+    /* CSS to hide the title and uploader */
+    .hide-title-uploader .ytp-title {
+      display: none !important;
+    }
+    .hide-title-uploader .ytp-chrome-top {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
-  <div style="max-width: 800px; margin: 0 auto;">
-    <iframe src="https://drive.google.com/file/d/192E6jyxjPHGYMTMTjlTgrhkvPL6J78hp/preview" width="640" height="480"></iframe>
-  </div>
+  <!-- Placeholder for the video -->
+  <div id="player"></div>
+
+  <!-- Include the YouTube iframe API script -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <!-- JavaScript code to embed the video without displaying the title and uploader -->
+  <script>
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '360',
+        width: '640',
+        videoId: '00RMSRaNlrQ', // Replace VIDEO_ID_HERE with your actual YouTube video ID
+        playerVars: {
+          'controls': 0, // Hide controls
+          'fs': 0, // Hide full screen button
+          'iv_load_policy': 3, // Hide annotations
+          'modestbranding': 0, // Hide YouTube logo
+          'rel': 0, // Hide related videos
+          'showinfo': 0 // Hide video title and uploader
+        },
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+
+    // The API will call this function when the video player is ready.
+    function onPlayerReady(event) {
+      // You can do something here if needed
+    }
+  </script>
 </body>
 </html>
+

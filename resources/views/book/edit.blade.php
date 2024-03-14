@@ -90,10 +90,11 @@ $user = Auth::guard('admin')->user();
                         <div class="form-group">
                             <label for="file">Book File</label>
                             <div class="input-group">
-                             <input type="file" name="file" class=" form-control" id="">
+                                <textarea name="pdf_file"  class=" form-control" id="" cols="50" rows="10">
+                                 {{ $books->pdf_file }}
+                                </textarea>
+                             {{-- <input type="file" name="file" class=" form-control" id=""> --}}
                             </div>
-                            <img src="{{ asset('/storage/Book/'.$books->pdf_file) }}" style="width: 80px; height:40px; padding-top:3px;" alt="">
-
                           </div>
                     </div>
                   </div>

@@ -127,8 +127,17 @@ class MainContorller extends Controller
     public function getBlogByCategory($categoryId) {
         $blog = BlogCategory::findOrFail($categoryId);
         $blogs = $blog->blogs()->get();
-
         return view('Frontend.pages.blogs.blog_list_partial', compact('blogs'));
+    }
+
+    public function getFreeCourseLesson($id) {
+        $lesson = Lesson::findOrFail($id);
+        return view('Frontend.pages.course.free_course.partial', compact('lesson'));
+    }
+
+    public function getPaidCourseLesson($id) {
+        $lesson = Lesson::findOrFail($id);
+        return view('Frontend.pages.course.mylearn.partial', compact('lesson'));
     }
 
 
@@ -141,21 +150,18 @@ class MainContorller extends Controller
 
     public function freecoursedetail($course_code){
           // Google Drive video link
-          $googleDriveLink = "https://drive.google.com/file/d/192E6jyxjPHGYMTMTjlTgrhkvPL6J78hp/preview";
 
-          // Encrypt the link
-          $encryptedLink = Crypt::encryptString($googleDriveLink);
         $cor=Course::with('category','youtubeLinks','pdfs','lessons')->where('type','free')->where('course_code',$course_code)->first();
         // dd($cor);
         // foreach( $course as $cor){
         //  $cor->where('course_code',$course_code)->first();
         //  }
         //  dd($cor);
-         $lessons=Lesson::where('course_id',$cor->id)->paginate(1);
+         $lessons=Lesson::where('course_id',$cor->id)->get();
         //  dd($lessons);
 
         //   dd($cor);
-        return view('Frontend.pages.course.free_course.details',compact('cor','encryptedLink','lessons'));
+        return view('Frontend.pages.course.free_course.details',compact('cor','lessons'));
     }
 
     public function decryptLink(Request $request)
@@ -228,6 +234,20 @@ class MainContorller extends Controller
         return view('Frontend.pages.store.mylearn.index',compact('enrolled_pdfs'));
 
     }
+
+    // new!
+    public function view_my_pdf($pdfId){
+        $book = Book::where('order_code',$pdfId)->first();
+        $order=PdfOrder::where('pdf_id',$book->id)->where('user_id',Auth::user()->id)->where('status','paid')->latest()->first();
+        // Check if the book exists and if the authenticated user is authorized to view it
+        if (empty($order)) {
+            // You may want to handle unauthorized access here, for example, redirecting to an error page.
+            Alert::toast('You don`t have  permission!','error');
+            return back();
+        }
+        return view('Frontend.pages.store.free_pdf.pdf',compact('book'));
+    }
+
 
     public function show($id)
     {
@@ -329,6 +349,17 @@ class MainContorller extends Controller
         return view('Frontend.pages.store.free_pdf.details',compact('pdf'));
     }
 
+    // new!
+    public function view_free_pdf($order_code){
+        $book=Book::where('order_code',$order_code)->where('type','free')->first();
+        if($book){
+        // dd($book->pdf_file);
+        return view('Frontend.pages.store.free_pdf.pdf',compact('book'));
+        }else{
+            Alert::toast('You don`t have permission to access this pdf','error');
+            return back();
+        }
+    }
 
 
 
@@ -343,7 +374,7 @@ class MainContorller extends Controller
         ->first();
         // dd($courses);
         if ($courses) {
-            $lessons=Lesson::where('course_id',$course->id)->paginate(1);
+            $lessons=Lesson::where('course_id',$course->id)->get();
             return view('Frontend.pages.course.mylearn.mylearn_detail',compact('course','lessons'));
         } else {
             Alert::toast('No such course is available','error');
@@ -450,8 +481,8 @@ class MainContorller extends Controller
     }
 
     public function contact(){
-
-        return view('Frontend.pages.contact.contact');
+        $about_us=AboutUs::first();
+        return view('Frontend.pages.contact.contact',compact('about_us'));
     }
 
     public function faq(){

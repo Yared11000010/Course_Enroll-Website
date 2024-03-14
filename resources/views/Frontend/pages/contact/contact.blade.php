@@ -22,7 +22,7 @@
                             </div>
                             <div class="contact-text">
                                 <h5>Call Us</h5>
-                                <span>+251911262107</span>
+                                <span>{{  $about_us->mobile }}</span>
                             </div>
                         </li>
                         <li>
@@ -31,7 +31,7 @@
                             </div>
                             <div class="contact-text">
                                 <h5>Email Us</h5>
-                                <span>Atsbehateklu166@Gmail.Com</span>
+                                <span>{{  $about_us->email }}</span>
                             </div>
                         </li>
                         <li>
@@ -39,9 +39,9 @@
                                 <i class="ti-location-pin"></i>
                             </div>
                             <div class="contact-text">
-                                <h5>Location Address : Adiss Ababa, Ethiopia</h5>
+                                <h5>Location Address :</h5>
                                 <span>
-                                Bole Subcity, Around 22 Tsega Business Center</span>
+                                {{  $about_us->address }}</span>
                             </div>
                         </li>
                     </ul>

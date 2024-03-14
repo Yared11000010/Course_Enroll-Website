@@ -18,200 +18,231 @@ use RealRashid\SweetAlert\Facades\Alert;
 class CourseController extends Controller
 {
     //
-    public function index(){
+    public function index()
+    {
         $user = Auth::guard('admin')->user();
         if (!$user || !$user->hasPermissionByRole('view course')) {
-            Alert::toast('You dont have access to this page.','error');
+            Alert::toast('You dont have access to this page.', 'error');
             return redirect()->back();
         }
-        $allcourses=Course::all();
-        return view('course.index',compact('allcourses'));
+        $allcourses = Course::all();
+        return view('course.index', compact('allcourses'));
     }
 
-    public function create(){
+    public function create()
+    {
         $user = Auth::guard('admin')->user();
         if (!$user || !$user->hasPermissionByRole('add course')) {
-            Alert::toast('You dont have access to this page.','error');
+            Alert::toast('You dont have access to this page.', 'error');
             return redirect()->back();
         }
-        $category=CourseCategory::all();
-        return view('course.create',compact('category'));
+        $category = CourseCategory::all();
+        return view('course.create', compact('category'));
     }
 
-    public function store(Request $request){
-        $user = Auth::guard('admin')->user();
-        if (!$user || !$user->hasPermissionByRole('add course')) {
-            Alert::toast('You dont have access to this page.','error');
+    public function store(Request $request)
+    {
+
+        if ($request->method() !== 'POST') {
+            Alert::toast('Invalid request method.', 'error');
             return redirect()->back();
         }
-        $request->validate([
+        try {
 
-          'category_id'=>'required',
-          'title'=>'required',
-          'image'=>'required|image',
-          'summernote'=>'required',
-          'pdf' => 'required|mimes:pdf,xlx,csv|max:2048',
-          'type'=>'required',
-          'price'=>'required',
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('add course')) {
+                Alert::toast('You dont have access to this page.', 'error');
+                return redirect()->back();
+            }
+            $request->validate([
+                'category_id' => 'required',
+                'title' => 'required',
+                'image' => 'required|image',
+                'summernote' => 'required',
+                'pdf' => 'required|mimes:pdf,xlx,csv',
+                'type' => 'required',
+                'price' => 'required',
 
-        ]);
+            ]);
 
-        $orderCode = $this->generateOrderCode();
+            $orderCode = $this->generateOrderCode();
 
-        $course= new Course();
-        $course->title=$request->input('title');
-        $course->course_code=$orderCode;
-        $course->category_id=$request->input('category_id');
-        $course->description=$request->input('summernote');
-        $course->type=$request->input('type');
+            $course = new Course();
+            $course->title = $request->input('title');
+            $course->course_code = $orderCode;
+            $course->category_id = $request->input('category_id');
+            $course->description = $request->input('summernote');
+            $course->type = $request->input('type');
 
-        if ($request->hasFile('pdf')) {
-            $fileNameWithExt = $request->file('pdf')->getClientOriginalName();
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('pdf')->getClientOriginalExtension();
-            $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+            if ($request->hasFile('pdf')) {
+                $fileNameWithExt = $request->file('pdf')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('pdf')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
 
-            $path = $request->file('pdf')->storeAs('public/course/', $fileNameToStore);
-            $course->pdf_file = $fileNameToStore;
-        }
+                $path = $request->file('pdf')->storeAs('public/course/', $fileNameToStore);
+                $course->pdf_file = $fileNameToStore;
+            }
 
-        if ($request->hasFile('image')) {
-            $fileNameWithExt = $request->file('image')->getClientOriginalName();
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+            if ($request->hasFile('image')) {
+                $fileNameWithExt = $request->file('image')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
 
-            $path = $request->file('image')->storeAs('public/course/', $fileNameToStore);
-            $course->image = $fileNameToStore;
-        }
+                $path = $request->file('image')->storeAs('public/course/', $fileNameToStore);
+                $course->image = $fileNameToStore;
+            }
 
-        if ($request->hasFile('video')) {
-            $fileNameWithExt = $request->file('video')->getClientOriginalName();
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('video')->getClientOriginalExtension();
-            $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+            if ($request->hasFile('video')) {
+                // Delete existing video file
 
-            $path = $request->file('video')->storeAs('public/course/video/', $fileNameToStore);
-            $course->video = $fileNameToStore;
-        }
+                // Generate a unique file name
+                $fileNameWithExt = $request->file('video')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('video')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
 
+                // Store the video file
+                $path = $request->file('video')->storeAs('public/course/video/', $fileNameToStore);
 
-        $course->price=$request->input('price');
-        $course->save();
-
-        // // Save multiple YouTube links
-        // foreach ($request->input('youtube_links') as $youtubeLink) {
-        //     $course->youtubeLinks()->create(['youtube_link' => $youtubeLink]);
-        // }
+                // Update the course model with the new video file name
+                $course->video = $fileNameToStore;
+            }
 
 
+            $course->price = $request->input('price');
+            $course->save();
 
 
-        Alert::toast('Course has been added','success');
-       return redirect()->route('all-courses');
-    }
-
-    public function edit($id){
-        $user = Auth::guard('admin')->user();
-        if (!$user || !$user->hasPermissionByRole('edit course')) {
-            Alert::toast('You dont have access to this page.','error');
+            Alert::toast('Course has been added', 'success');
+            return redirect()->route('all-courses');
+        } catch (\Exception $e) {
+            Alert::toast('Failed to add course. Please try again.', 'error');
             return redirect()->back();
         }
-        $course=Course::findOrFail($id);
-        $videoPath = asset('/storage/course/video/'.$course->video);
-
-        $category=CourseCategory::all();
-
-        if($course){
-            return view('course.edit',compact('course','category','videoPath'));
-        }
     }
-    public function update(Request $request){
+
+    public function edit($id)
+    {
         $user = Auth::guard('admin')->user();
         if (!$user || !$user->hasPermissionByRole('edit course')) {
-            Alert::toast('You dont have access to this page.','error');
+            Alert::toast('You dont have access to this page.', 'error');
             return redirect()->back();
         }
-        $request->validate([
-            'category_id' => 'required',
-            'title' => 'required',
-            'image' => 'nullable|image',
-            'summernote' => 'required',
-            'pdf' => 'nullable|mimes:pdf,xlx,csv|max:2048',
-            'type' => 'required',
-            'price' => 'required',
-        ]);
+        $course = Course::findOrFail($id);
+        $videoPath = asset('/storage/course/video/' . $course->video);
 
-        $course = Course::findOrFail($request->input('id'));
+        $category = CourseCategory::all();
 
-        $course->title = $request->input('title');
-        $course->category_id = $request->input('category_id');
-        $course->description = $request->input('summernote');
-        $course->type = $request->input('type');
-        $course->price = $request->input('price');
-
-        // Update course image if provided
-        if ($request->hasFile('image')) {
-
-            Storage::delete('public/course/' . $course->image);
-            $fileNameWithExt = $request->file('image')->getClientOriginalName();
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
-
-            $path = $request->file('image')->storeAs('public/course/', $fileNameToStore);
-            $course->image = $fileNameToStore;
+        if ($course) {
+            return view('course.edit', compact('course', 'category', 'videoPath'));
         }
-
-        if ($request->hasFile('video')) {
-            Storage::delete('public/course/video/' . $course->video);
-
-            $fileNameWithExt = $request->file('video')->getClientOriginalName();
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('video')->getClientOriginalExtension();
-            $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
-
-            $path = $request->file('video')->storeAs('public/course/video/', $fileNameToStore);
-            $course->video = $fileNameToStore;
+    }
+    public function update(Request $request)
+    {
+        if ($request->method() !== 'POST') {
+            Alert::toast('Invalid request method.', 'error');
+            return redirect()->back();
         }
-        if ($request->hasFile('pdf')) {
-            Storage::delete('public/course/' . $course->pdf_file);
+        try {
 
-            $fileNameWithExt = $request->file('pdf')->getClientOriginalName();
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('pdf')->getClientOriginalExtension();
-            $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
 
-            $path = $request->file('pdf')->storeAs('public/course/', $fileNameToStore);
-            $course->pdf_file = $fileNameToStore;
+            $user = Auth::guard('admin')->user();
+            if (!$user || !$user->hasPermissionByRole('edit course')) {
+                Alert::toast('You dont have access to this page.', 'error');
+                return redirect()->back();
+            }
+            $request->validate([
+                'category_id' => 'required',
+                'title' => 'required',
+                'image' => 'nullable|image',
+                'summernote' => 'required',
+                'pdf' => 'nullable|mimes:pdf,xlx,csv',
+                'type' => 'required',
+                'price' => 'required',
+            ]);
+
+            $course = Course::findOrFail($request->input('id'));
+
+            $course->title = $request->input('title');
+            $course->category_id = $request->input('category_id');
+            $course->description = $request->input('summernote');
+            $course->type = $request->input('type');
+            $course->price = $request->input('price');
+
+            // Update course image if provided
+            if ($request->hasFile('image')) {
+
+                Storage::delete('public/course/' . $course->image);
+                $fileNameWithExt = $request->file('image')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+
+                $path = $request->file('image')->storeAs('public/course/', $fileNameToStore);
+                $course->image = $fileNameToStore;
+            }
+
+            if ($request->hasFile('video')) {
+                // Delete existing video file
+                Storage::delete('public/course/video/' . $course->video);
+
+                // Generate a unique file name
+                $fileNameWithExt = $request->file('video')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('video')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+
+                // Store the video file
+                $path = $request->file('video')->storeAs('public/course/video/', $fileNameToStore);
+
+                // Update the course model with the new video file name
+                $course->video = $fileNameToStore;
+            }
+            if ($request->hasFile('pdf')) {
+                Storage::delete('public/course/' . $course->pdf_file);
+
+                $fileNameWithExt = $request->file('pdf')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('pdf')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+
+                $path = $request->file('pdf')->storeAs('public/course/', $fileNameToStore);
+                $course->pdf_file = $fileNameToStore;
+            }
+
+
+            $course->update();
+
+            Alert::toast('Course has been updated', 'success');
+            return redirect()->route('all-courses');
+        } catch (\Exception $e) {
+            Alert::toast('Failed to add course. Please try again.', 'error');
+            return redirect()->back();
         }
-
-
-        $course->update();
-
-        Alert::toast('Course has been updated','success');
-       return redirect()->route('all-courses');
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $user = Auth::guard('admin')->user();
         if (!$user || !$user->hasPermissionByRole('delete course')) {
-            Alert::toast('You dont have access to this page.','error');
+            Alert::toast('You dont have access to this page.', 'error');
             return redirect()->back();
         }
-        $course=Course::find($id);
+        $course = Course::find($id);
 
-        if($course){
+        if ($course) {
             Storage::delete('public/course/' . $course->image);
-            Storage::delete('public/course/'.$course->pdf_file);
-            Storage::delete('public/course/video/'.$course->video);
+            Storage::delete('public/course/' . $course->pdf_file);
+            Storage::delete('public/course/video/' . $course->video);
 
             $course->delete();
 
-            Alert::toast('Successfully deleted the course.','success');
+            Alert::toast('Successfully deleted the course.', 'success');
             return redirect()->back();
-        }else{
-            Alert::toast('Something is wroing','error');
+        } else {
+            Alert::toast('Something is wroing', 'error');
             return redirect()->back();
         }
     }
@@ -221,7 +252,7 @@ class CourseController extends Controller
         try {
             $user = Auth::guard('admin')->user();
             if (!$user || !$user->hasPermissionByRole('edit course')) {
-                Alert::toast('You dont have access to this page.','error');
+                Alert::toast('You dont have access to this page.', 'error');
                 return redirect()->back();
             }
             $course = Course::find($id);
@@ -242,7 +273,7 @@ class CourseController extends Controller
         try {
             $user = Auth::guard('admin')->user();
             if (!$user || !$user->hasPermissionByRole('edit course')) {
-                Alert::toast('You dont have access to this page.','error');
+                Alert::toast('You dont have access to this page.', 'error');
                 return redirect()->back();
             }
             $course = Course::find($id);
@@ -272,4 +303,3 @@ class CourseController extends Controller
         return $randomNumber;
     }
 }
-
