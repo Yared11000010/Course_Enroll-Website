@@ -7,7 +7,7 @@
                 <div class="single-blog blog-wrapper blog-list blog-details blue-blog mb-40">
                     <div class="single-blog-main-content mb-30">
                         <div class="blog-thumb mb-35">
-                            <a href="{{ url('blogs/detail/'.$cor->id) }}">
+                            <a href="javascirpt:void(0);">
                                 <img src="{{ asset('/storage/course/'.$cor->image) }}" style="max-height: 350px;" alt="">
                             </a>
                         </div>
@@ -15,44 +15,23 @@
                             <div class="blog-meta news-meta">
                                 <span>{{ $cor->created_at }}</span>
                             </div>
-                            <h5><a href="{{ url('blogs/detail/'.$cor->id) }}">{{$cor->title }}</a></h5>
+                            <h5><a href="javascirpt:void(0);">{{$cor->title }}</a></h5>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="embed-responsive embed-responsive-16by9">
-                                        <video id="player" class="embed-responsive-item" playsinline controls data-poster="/path/to/poster.jpg">
+                                        <video id="player" class="embed-responsive-item" playsinline controls controlsList="nodownload"  data-poster="/path/to/poster.jpg">
                                             <source src="{{ asset('/storage/course/video/'.$cor->video) }}" type="video/mp4" />
                                         </video>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <span class="gray-color">Course pdf :<br>
-                                        <a href="javascript:void(0);">{{$cor->pdf_file }}</a>
-                                    </span>
-                                    <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#coursepdfModal">
-                                        Open PDF
-                                    </button>
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="coursepdfModal" tabindex="-1" role="dialog" aria-labelledby="coursepdfModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="coursepdfModalLabel">PDF Viewer</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div style="width: 100%; height: 800px;">
-                                                        <iframe src="{{ url('show-course-pdf/'.$cor->id) }}" width="100%" height="100%" style="border: none;"></iframe>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     Description
                                     <p>
                                         {!! $cor->description !!}
                                     </p>
+                                    <span class="gray-color">Course pdf :<br>
+                                        <a href="{{ url('view-course-pdf-view/'.$cor->course_code) }}" target="_blank" class="btn btn-primary">View PDF</a>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -64,9 +43,6 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-xl-8 col-lg-8 " id="lessonlist">
-
-            </div>
             <div class="col-xl-4 col-lg-4">
                 <div class="courses-details-sidebar-area">
                     <div class="widget mb-40 widget-padding white-bg">
@@ -94,9 +70,20 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-8 col-lg-8 " id="lessonlist">
+
+            </div>
         </div>
     </div>
 </div>
+<script>
+    // Get the video element and the source element
+    var video = document.getElementById('myVideo');
+    // Set the source URL dynamically
+    var videoUrl = '{{ $cor->video }}';
+    // Set the src attribute with base64 data
+    video.src = 'data:video/mp4;base64,' + videoUrl;
+</script>
 <script>
     function displayBlogByCategory(id) {
         $.ajax({

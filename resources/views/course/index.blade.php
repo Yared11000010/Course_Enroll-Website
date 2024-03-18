@@ -35,7 +35,7 @@ $user = Auth::guard('admin')->user();
                                      Create course
                                 </a>
                                 @endif
-                                
+
                             </h3>
                         </div>
                         <!-- /.card-header -->
@@ -85,7 +85,7 @@ $user = Auth::guard('admin')->user();
                                                         </a>
                                                         @endif
                                                         @if ($user && $user->hasPermissionByRole('delete course'))
-                                                        <a href="{{ url('admin/course/delete/'.$course->id) }}"  data-confirm-delete="true" class=" btn-sm">
+                                                        <a href="{{ url('admin/course/delete/'.$course->id) }}" onclick="return confirmDelete();"  data-confirm-delete="true" class=" btn-sm">
                                                             <i class="fas fa-trash text-danger"></i>
                                                         </a>
                                                         @endif
@@ -114,3 +114,8 @@ $user = Auth::guard('admin')->user();
     <!-- /.content -->
 </div>
 @endsection
+<script>
+    function confirmDelete() {
+  return confirm("Are you sure you want to delete this course? if you delete this course all lessons under this course will be all so deleted?");
+}
+</script>

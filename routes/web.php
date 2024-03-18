@@ -190,6 +190,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('show-course-pdf/{id}',[MainContorller::class,'show_course_pdf'])->name('show-course-pdf');
     Route::get('show-lesson-pdf/{id}',[MainContorller::class,'show_lesson_pdf'])->name('show-lesson-pdf');
 
+//!new
+Route::get('view-course-pdf-view/{course_code}',[CourseController::class,'view_course_pdf'])->name('view-course-pdf-view');
+Route::get('view-lesson-pdf-view/{lesson_code}',[LessonController::class,'view_lesson_pdf'])->name('view-lesson-pdf-view');
+
 
 
 Route::get('admin/forget-password', [AdminController::class, 'forgetpassword'])->name('admin-forget-password');

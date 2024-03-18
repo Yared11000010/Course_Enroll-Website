@@ -1,6 +1,7 @@
 @extends('Frontend.layouts.main')
 @section('content')
 <style>
+
     .heading {
         text-align: center;
         color: #454343;
@@ -295,24 +296,25 @@
     <div id="courses" class="courses-area courses-bg-height pt-95 pb-70">
         <div class="container">
             <div class="row">
-                <div class="section-title mb-50 text-center">
-                    <div class="section-title-heading mb-20">
-                        <h1 class="primary-color">Our Latest Courses</h1>
-                    </div>
-                    <div class="section-title-para">
-                        <p class="gray-color">
-                            Dive into a world of knowledge with our latest courses! Stay ahead of the curve and explore our newest offerings designed to inspire, challenge, and enrich your learning journey. From cutting-edge technologies to timeless classics, our selection spans a diverse range of subjects to cater to every interest and ambition. Don't miss out on the opportunity to expand your horizons and acquire valuable skills. Enroll now and take the first step towards unlocking your full potential!
-                        </p>
-                    </div>
-                    <div style="background-color: #ffffff; display:flex; padding:4px; justify-content:center; ">
-                        @foreach ($course_category as $cat)
-                        <a href="{{ url('course-category/'.$cat->id) }}" class="" style="padding:5px 15px; background-color:#FDC800;color:#000;">
-                            {{ $cat->name }} &nbsp; (<span>{{ $cat->courses()->count() }}</span>)
-                        </a> &nbsp;
-                        @endforeach
+                <div class="col-md-12">
+                    <div class="section-title mb-50 text-center">
+                        <div class="section-title-heading mb-20">
+                            <h1 class="primary-color">Our Latest Courses</h1>
+                        </div>
+                        <div class="section-title-para">
+                            <p class="gray-color">Dive into a world of knowledge with our latest courses! Stay ahead of the curve and explore our newest offerings designed to inspire, challenge, and enrich your learning journey. From cutting-edge technologies to timeless classics, our selection spans a diverse range of subjects to cater to every interest and ambition. Don't miss out on the opportunity to expand your horizons and acquire valuable skills. Enroll now and take the first step towards unlocking your full potential!</p>
+                        </div>
+                        <div class="d-flex justify-content-center flex-wrap">
+                            @foreach ($course_category as $cat)
+                            <a href="{{ url('course-category/'.$cat->id) }}" class="btn btn-warning mr-2 mb-2">
+                                {{ $cat->name }} <span class="badge badge-dark">{{ $cat->courses()->count() }}</span>
+                            </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="courses-list">
                 <div class="row">

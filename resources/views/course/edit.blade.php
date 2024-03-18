@@ -76,26 +76,21 @@ $user = Auth::guard('admin')->user();
                         <div class="form-group">
                             <label for="video">Course Video</label>
                             <div class="input-group">
-                             <input type="file" name="video" class=" form-control" id="">
+                                <input type="file" name="video" class=" form-control" id="">
                             </div>
-                            <br>
-                            <video width="620" height="440" controls>
-                                <source src="{{ asset('/storage/course/video/'.$course->video) }}" type="video/mp4">
-                            </video>
-                          </div>
+                        </div>
                     </div>
-                  </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="form-group">
-                            <label for="pdf">Course PDF Files</label>
-                            <input type="file" name="pdf" multiple class="form-control">
+                            <label for="pdf">Course PDF File</label>
+                            <div class="input-group">
+                                <input type="file" name="pdf" multiple class=" form-control" id="">
+                            </div>
                             @error('pdf')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
-                            @if ($course->pdf_file)
-                            <a href="">{{ $course->pdf_file }}</a> <br>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -105,8 +100,8 @@ $user = Auth::guard('admin')->user();
                         <div class="form-group">
                             <label for="type" class="form-label">Course Type</label>
                             <Select class=" form-control" name="type">
-                                <option value="Paid" {{ $course->type == 'Paid' ? 'selected' : '' }}>Paid</option>
-                                <option value="Free" {{ $course->type == 'Free' ? 'selected' : '' }}>Free</option>
+                                <option value="Paid" {{ $course->type == 'paid' ? 'selected' : '' }}>Paid</option>
+                                <option value="Free" {{ $course->type == 'free' ? 'selected' : '' }}>Free</option>
                             </Select>
                         </div>
                     </div>
@@ -134,19 +129,5 @@ $user = Auth::guard('admin')->user();
 </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript">
-var i = {{ count($course->youtubeLinks) }};
-$("#dynamic-ar").click(function () {
-++i;
-$("#dynamicAddRemove").append('<tr><td><input type="text" name="addMoreInputFields[' + i +
-    '][subject]" placeholder="Enter Link" class="form-control" /></td><td><button type="button" class="btn btn-outline-danger text-white remove-input-field">Delete</button></td></tr>'
-    );
-});
-$(document).on('click', '.remove-input-field', function () {
-$(this).parents('tr').remove();
-});
-</script>
 
 @endsection

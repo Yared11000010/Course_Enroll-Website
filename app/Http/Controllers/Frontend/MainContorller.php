@@ -266,6 +266,7 @@ class MainContorller extends Controller
          return response()->file($pdfPath);
     }
 
+
     public function show_lesson_pdf($id){
         $lesson_pdf=Lesson::findOrFail($id);
         $pdfPath = storage_path('app/public/lesson/' . $lesson_pdf->pdf_file);
@@ -336,7 +337,6 @@ class MainContorller extends Controller
     public function freepdf(){
         $pdf=Book::where('type','free')->get();
         // dd($courses);
-
         return view('Frontend.pages.store.free_pdf.index',compact('pdf'));
     }
 
@@ -375,6 +375,7 @@ class MainContorller extends Controller
         // dd($courses);
         if ($courses) {
             $lessons=Lesson::where('course_id',$course->id)->get();
+            // dd($lessons);
             return view('Frontend.pages.course.mylearn.mylearn_detail',compact('course','lessons'));
         } else {
             Alert::toast('No such course is available','error');

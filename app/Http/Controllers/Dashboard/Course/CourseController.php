@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\CourseYoutubeLink;
+use App\Models\Order;
+use Exception;
 use GuzzleHttp\RetryMiddleware;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -13,11 +15,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\Storage;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CourseController extends Controller
 {
-    //
+
+
     public function index()
     {
         $user = Auth::guard('admin')->user();
@@ -38,6 +43,40 @@ class CourseController extends Controller
         }
         $category = CourseCategory::all();
         return view('course.create', compact('category'));
+    }
+
+    public function view_course_pdf($course_code){
+        try {
+
+            $book=Course::where('course_code',$course_code)->first();
+            if($book->type==="free"){
+                if($book){
+                    return view('Frontend.pages.course.pdf.course_pdf',compact('book'));
+                    }else{
+                       Alert::toast('something is wrong','error');
+                       return redirect()->back();
+                   }
+            }
+            $book_id=$book->id;
+            $order=Order::where('user_id',Auth::user()->id)->where('course_id',$book_id)->get();
+            if(!$order){
+                Alert::toast('You don`t have permission to access this pdf!','error');
+                return redirect()->back();
+            }else{
+            //    dd($book);
+            if($book){
+            return view('Frontend.pages.course.pdf.course_pdf',compact('book'));
+            }else{
+               Alert::toast('something is wrong','error');
+               return redirect()->back();
+           }
+           }
+
+        } catch (\Exception $e) {
+            Alert::toast('Failed Please try again.', 'error');
+            return redirect()->back();
+        }
+
     }
 
     public function store(Request $request)
@@ -74,15 +113,6 @@ class CourseController extends Controller
             $course->description = $request->input('summernote');
             $course->type = $request->input('type');
 
-            if ($request->hasFile('pdf')) {
-                $fileNameWithExt = $request->file('pdf')->getClientOriginalName();
-                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-                $extension = $request->file('pdf')->getClientOriginalExtension();
-                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
-
-                $path = $request->file('pdf')->storeAs('public/course/', $fileNameToStore);
-                $course->pdf_file = $fileNameToStore;
-            }
 
             if ($request->hasFile('image')) {
                 $fileNameWithExt = $request->file('image')->getClientOriginalName();
@@ -94,24 +124,29 @@ class CourseController extends Controller
                 $course->image = $fileNameToStore;
             }
 
-            if ($request->hasFile('video')) {
-                // Delete existing video file
 
-                // Generate a unique file name
+            if ($request->hasFile('video')) {
                 $fileNameWithExt = $request->file('video')->getClientOriginalName();
                 $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
                 $extension = $request->file('video')->getClientOriginalExtension();
                 $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
 
-                // Store the video file
                 $path = $request->file('video')->storeAs('public/course/video/', $fileNameToStore);
-
-                // Update the course model with the new video file name
                 $course->video = $fileNameToStore;
             }
+            // $lesson->video = $request->input('video');
 
+            if ($request->hasFile('pdf')) {
 
-            $course->price = $request->input('price');
+                $fileNameWithExt = $request->file('pdf')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('pdf')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+
+                $path = $request->file('pdf')->storeAs('public/course/', $fileNameToStore);
+                $course->pdf_file = $fileNameToStore;
+            }
+
             $course->save();
 
 
@@ -141,7 +176,7 @@ class CourseController extends Controller
     }
     public function update(Request $request)
     {
-        if ($request->method() !== 'POST') {
+        if ($request->method() !== 'PUT') {
             Alert::toast('Invalid request method.', 'error');
             return redirect()->back();
         }
@@ -185,24 +220,21 @@ class CourseController extends Controller
             }
 
             if ($request->hasFile('video')) {
-                // Delete existing video file
-                Storage::delete('public/course/video/' . $course->video);
 
-                // Generate a unique file name
+                Storage::delete('public/course/video/' . $course->video);
                 $fileNameWithExt = $request->file('video')->getClientOriginalName();
                 $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
                 $extension = $request->file('video')->getClientOriginalExtension();
                 $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
 
-                // Store the video file
                 $path = $request->file('video')->storeAs('public/course/video/', $fileNameToStore);
-
-                // Update the course model with the new video file name
                 $course->video = $fileNameToStore;
             }
-            if ($request->hasFile('pdf')) {
-                Storage::delete('public/course/' . $course->pdf_file);
+            // $lesson->video = $request->input('video');
 
+            if ($request->hasFile('pdf')) {
+
+                Storage::delete('public/course/'.$course->pdf_file);
                 $fileNameWithExt = $request->file('pdf')->getClientOriginalName();
                 $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
                 $extension = $request->file('pdf')->getClientOriginalExtension();
@@ -211,10 +243,11 @@ class CourseController extends Controller
                 $path = $request->file('pdf')->storeAs('public/course/', $fileNameToStore);
                 $course->pdf_file = $fileNameToStore;
             }
+            // $lesson->pdf_file = $request->input('pdf_file');
+
 
 
             $course->update();
-
             Alert::toast('Course has been updated', 'success');
             return redirect()->route('all-courses');
         } catch (\Exception $e) {

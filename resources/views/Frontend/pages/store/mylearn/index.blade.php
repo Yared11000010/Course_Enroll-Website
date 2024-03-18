@@ -40,13 +40,13 @@
             <div class="col-xl-4">
                 <div class="shop-inner mb-30 white-bg">
                     <div class="shop-thumb">
-                        <a href="{{ url('shop-details/'.$book->id) }}">
+                        <a href="{{ url('my-pdf/'.$book->order_code) }}">
                             <img src="{{ asset('/storage/book/'.$book->image) }}" style="max-height: 300px;" alt="book image">
                         </a>
                     </div>
                     <div class="book-inner-content">
                         <div class="sohop-heading mb-20">
-                            <h1 class="shop-book-name"><a href="{{ url('shop-details/'.$book->id) }}">{{ $book->title }}</a></h1>
+                            <h1 class="shop-book-name"><a href="{{ url('my-pdf/'.$book->order_code) }}">{{ $book->title }}</a></h1>
                             <p class="pr-3"> <?php
                                 $words = str_word_count(strip_tags($book->description), 2);
                                 $first20Words = implode(' ', array_slice($words, 0, 10));

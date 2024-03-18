@@ -90,11 +90,13 @@ $user = Auth::guard('admin')->user();
                         <div class="form-group">
                             <label for="file">Book File</label>
                             <div class="input-group">
-                                <textarea name="pdf_file"  class=" form-control" id="" cols="50" rows="10">
+                                {{-- <textarea name="pdf_file"  class=" form-control" id="" cols="50" rows="10">
                                  {{ $books->pdf_file }}
-                                </textarea>
-                             {{-- <input type="file" name="file" class=" form-control" id=""> --}}
+                                </textarea> --}}
+                             <input type="file" name="file" class=" form-control" id="">
                             </div>
+                            <br>   {{ $books->pdf_file }}
+
                           </div>
                     </div>
                   </div>

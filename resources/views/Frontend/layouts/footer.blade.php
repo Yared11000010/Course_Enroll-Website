@@ -1,3 +1,10 @@
+@php
+use App\Models\AboutUs;
+
+$about=AboutUs::first();
+// dd($about);
+
+@endphp
 <div class="subscribe-area">
     <div class="container">
         <div class="subscribe-box">
@@ -41,7 +48,7 @@
                             </div>
                             <div class="footer-para">
                                 <p>
-                                    Welcome to our course enrollment platform, where learning knows no bounds! Browse through our extensive range of courses designed to ignite your passions, enhance your skills, and shape your future. Whether you're interested in technology, arts, business, or beyond, we have something for everyone. Enroll now to embark on a journey of discovery, growth, and endless possibilities!
+                                    {{ $about->description }}
                                 </p>
                             </div>
                             <div class="footer-socila-icon">
@@ -111,17 +118,16 @@
                             <div class="footer-contact-list">
                                 <div class="single-footer-contact-info">
                                     <span class="ti-headphone "></span>
-                                    <span class="footer-contact-list-text">+251 91 126 2107</span>
+                                    <span class="footer-contact-list-text">{{ $about->mobile }}
                                 </div>
                                 <div class="single-footer-contact-info">
                                     <span class="ti-email "></span>
-                                    <span class="footer-contact-list-text">atsbehateklu166@gmail.com</span>
+                                    <span class="footer-contact-list-text">{{ $about->email }}</span>
                                 </div>
                                 <div class="single-footer-contact-info">
                                     <span class="ti-location-pin"></span>
                                     <span class="footer-contact-list-text">
-                                        Address : Adiss Ababa, Ethiopia
-                                        Bole Subcity, Around 22 Tsega Business Center.
+                                        Address : {{ $about->address }}
                                         </span>
                                 </div>
                             </div>

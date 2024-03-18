@@ -82,20 +82,20 @@ class BookController extends Controller
                 $book->image = $fileNameToStore;
             }
 
-            // if ($request->hasFile('file')) {
-            //     $fileNameWithExt = $request->file('file')->getClientOriginalName();
-            //     $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            //     $extension = $request->file('file')->getClientOriginalExtension();
-            //     $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+            if ($request->hasFile('file')) {
+                $fileNameWithExt = $request->file('file')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('file')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
 
-            //     $path = $request->file('file')->storeAs('public/book/', $fileNameToStore);
+                $path = $request->file('file')->storeAs('public/book/', $fileNameToStore);
 
-            //     //   $image = Image::make(public_path('storage/book/' . $fileNameToStore));
+                //   $image = Image::make(public_path('storage/book/' . $fileNameToStore));
 
-            //     //   $image->resize(139, 97)->save(public_path('storage/book/' . $fileNameToStore));
-            //     $book->pdf_file = $fileNameToStore;
-            // }
-            $book->pdf_file = $request->input('pdf_file');
+                //   $image->resize(139, 97)->save(public_path('storage/book/' . $fileNameToStore));
+                $book->pdf_file = $fileNameToStore;
+            }
+            // $book->pdf_file = $request->input('pdf_file');
 
             $book->type= $request->input('type');
             $book->order_code= $orderCode;
@@ -172,26 +172,26 @@ class BookController extends Controller
                 //   $image->resize(139, 97)->save(public_path('storage/book/' . $fileNameToStore));
                 $book->image = $fileNameToStore;
             }
-            // if ($request->hasFile('file')) {
+            if ($request->hasFile('file')) {
 
-            //     if ($book->pdf_file) {
-            //         Storage::delete('public/book/' . $book->pdf_file);
-            //     }
-            //     $fileNameWithExt = $request->file('file')->getClientOriginalName();
-            //     $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            //     $extension = $request->file('file')->getClientOriginalExtension();
-            //     $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+                if ($book->pdf_file) {
+                    Storage::delete('public/book/' . $book->pdf_file);
+                }
+                $fileNameWithExt = $request->file('file')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('file')->getClientOriginalExtension();
+                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
 
-            //     $path = $request->file('file')->storeAs('public/book/', $fileNameToStore);
+                $path = $request->file('file')->storeAs('public/book/', $fileNameToStore);
 
-            //     //   $image = Image::make(public_path('storage/book/' . $fileNameToStore));
+                //   $image = Image::make(public_path('storage/book/' . $fileNameToStore));
 
-            //     //   $image->resize(139, 97)->save(public_path('storage/book/' . $fileNameToStore));
-            //     $book->pdf_file = $fileNameToStore;
-            // }
+                //   $image->resize(139, 97)->save(public_path('storage/book/' . $fileNameToStore));
+             $book->pdf_file = $fileNameToStore;
+            }
             $book->title = $request->input('title');
             $book->type= $request->input('type');
-            $book->pdf_file = $request->input('pdf_file');
+            // $book->pdf_file = $request->input('pdf_file');
 
             $book->description=$request->input('summernote');
             $book->price=$request->input('price');

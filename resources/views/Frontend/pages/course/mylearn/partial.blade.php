@@ -17,31 +17,9 @@
                 <div class="course-details-overview-bottom d-flex justify-content-between mt-25">
                     <div class="course-overview-info-left">
                         <div class="course-overview-student-lecture mt-10">
-                            <span class="gray-color">course pdf :<br>
-                                <a href="javacript:void(0);">{{ $lesson->pdf_file }}</a><br>
-                            </span>
-                         <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#lessonPdf{{ $lesson->id }}">
-                            Open PDF
-                        </button>
-                        <!-- Modal -->
-                        <div class="modal fade" id="lessonPdf{{ $lesson->id }}" tabindex="-1" role="dialog" aria-labelledby="lessonPdfLabel{{ $lesson->id }}" aria-hidden="true">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="lessonPdfLabel{{ $lesson->id }}">PDF Viewer</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div style="width: 100%; height: 800px;">
-                                            <iframe src="{{ url('show-lesson-pdf/'.$lesson->id) }}" width="100%" height="100%" style="border: none;"></iframe>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                                <span class="gray-color">Course pdf :<br>
+                                    <a href="{{ url('view-lesson-pdf-view/'.$lesson->lesson_code) }}" target="_blank" class="btn btn-primary">View PDF</a>
+                                </span>
                         </div>
                     </div>
 
@@ -53,7 +31,7 @@
             <div class="col-md-12">
             <span class="gray-color">Lesson Video : <br></span>
                 <div class="embed-responsive embed-responsive-16by9">
-                    <video id="player" class="embed-responsive-item" playsinline controls data-poster="/path/to/poster.jpg">
+                    <video id="player" class="embed-responsive-item" playsinline controls controlsList="nodownload"  data-poster="/path/to/poster.jpg">
                         <source src="{{ asset('/storage/lesson/video/'.$lesson->video) }}" type="video/mp4" />
                     </video>
                 </div>
