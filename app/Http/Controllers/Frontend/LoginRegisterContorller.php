@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Frontend;
-
 use App\Http\Controllers\Controller;
 use App\Mail\ForgetPassword;
 use App\Models\User;
@@ -82,7 +81,6 @@ class LoginRegisterContorller extends Controller
             return redirect()->back();
         }
     }
-
     public function logout()
     {
         try {
@@ -96,7 +94,6 @@ class LoginRegisterContorller extends Controller
             return redirect()->back();
         }
     }
-
     public function userLogin(Request $request)
     {
         try {
@@ -112,7 +109,6 @@ class LoginRegisterContorller extends Controller
             ]);
 
             if ($validator->fails()) {
-
                 return redirect()->back()->withErrors($validator)->withInput();
             } else {
                 if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
